@@ -2,11 +2,12 @@ package com.example.bianqian.activity;
 
 import com.example.bianqian.R;
 
-public class MainActivity extends BasicActivity {
+public class LoginActivity extends BasicActivity {
+
 
     @Override
     public void setContentView() {
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_login);
     }
 
     @Override
