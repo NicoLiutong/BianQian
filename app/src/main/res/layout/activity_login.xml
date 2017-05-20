@@ -23,7 +23,6 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:hint="@string/password"
-            android:textColorHint="@color/white"
             style="@style/MyEditText"/>
         <CheckBox
             android:id="@+id/login_isseepassword"
@@ -41,7 +40,6 @@
             android:layout_height="wrap_content"
             android:layout_above="@id/login_passowrd"
             android:hint="@string/user_name"
-            android:textColorHint="@color/white"
             style="@style/MyEditText"/>
         <RelativeLayout
             android:layout_width="match_parent"
