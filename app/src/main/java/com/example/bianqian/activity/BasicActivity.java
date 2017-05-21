@@ -1,14 +1,9 @@
 package com.example.bianqian.activity;
 
 import android.app.Activity;
-import android.content.Context;
-import android.graphics.Rect;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
-import android.view.Window;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -22,27 +17,18 @@ import cn.bmob.v3.Bmob;
 
 public abstract class BasicActivity extends AppCompatActivity {
 
-    protected int mScreenWidth;
-    protected int mScreenHeight;
-
     public static List<Activity> activities = new ArrayList<>();
 
-    public static final String TAG = "bmob";
     @Override
-    public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
-        super.onCreate(savedInstanceState, persistentState);
-        Bmob.initialize(this,"3da138f19a8d8a32a5a64ac1c4e740df");
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        DisplayMetrics metric = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(metric);
-        mScreenWidth = metric.widthPixels;
-        mScreenHeight = metric.heightPixels;
-
-        addActivity(this);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView();
+        Bmob.initialize(this,"3da138f19a8d8a32a5a64ac1c4e740df");
+
         initViews();
-        initListeners();
         initData();
+        initListeners();
+        addActivity(this);
     }
 
     @Override
@@ -83,23 +69,6 @@ public abstract class BasicActivity extends AppCompatActivity {
             }
             mToast.show();
         }
-    }
-
-    /** 获取当前状态栏的高度
-     * getStateBar
-     * @Title: getStateBar
-     * @throws
-     */
-    public  int getStateBar(){
-        Rect frame = new Rect();
-        getWindow().getDecorView().getWindowVisibleDisplayFrame(frame);
-        int statusBarHeight = frame.top;
-        return statusBarHeight;
-    }
-
-    public static int dip2px(Context context, float dipValue){
-        float scale=context.getResources().getDisplayMetrics().density;
-        return (int) (scale*dipValue+0.5f);
     }
 
     public static void addActivity(Activity activity){

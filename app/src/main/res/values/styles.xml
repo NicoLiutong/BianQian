@@ -10,6 +10,7 @@
     </style>
 
     <style name="MyEditText">
+        <item name="android:background">@null</item>
         <item name="android:textColorHint">@color/white</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:textCursorDrawable">@null</item>
@@ -34,6 +35,7 @@
     </style>
 
     <style name="RegisterEdit">
+        <item name="android:background">@null</item>
         <item name="android:textColorHint">@color/white</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:textCursorDrawable">@null</item>
@@ -49,6 +51,8 @@
 
     <style name="PopuAnimation" parent="@android:style/Animation.Activity">
         <item name="android:activityOpenEnterAnimation">@anim/in_from_right</item>
+        <item name="android:activityOpenExitAnimation">@anim/out_to_alpha</item>
         <item name="android:activityCloseExitAnimation">@anim/out_to_right</item>
+        <item name="android:activityCloseEnterAnimation">@anim/in_form_alpha</item>
     </style>
 </resources>

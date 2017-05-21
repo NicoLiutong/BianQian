@@ -3,6 +3,7 @@ package com.example.bianqian.view;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.widget.EditText;
@@ -17,19 +18,12 @@ public class LineEditText extends EditText {
 
     private Paint paint;
 
-    public LineEditText(Context context) {
-        super(context);
-        setPaint();
-    }
+    private String hint;
 
     public LineEditText(Context context, AttributeSet attrs) {
         super(context, attrs);
         setPaint();
-    }
-
-    public LineEditText(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        setPaint();
+        init();
     }
 
     private void setPaint(){
@@ -37,7 +31,7 @@ public class LineEditText extends EditText {
         paint = new Paint();
         paint.setStyle(Paint.Style.STROKE);
         //可以自定义画笔的颜色
-        paint.setColor(ContextCompat.getColor(this.getContext(),R.color.edit_line));
+        paint.setColor(ContextCompat.getColor(this.getContext(), R.color.edit_line));
         //设置线宽
         paint.setStrokeWidth((float) 5.0);
     }
@@ -46,5 +40,19 @@ public class LineEditText extends EditText {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         canvas.drawLine(2,this.getHeight()-2,this.getWidth()-3,this.getHeight()-3,paint);
+    }
+
+    private void init(){
+        hint = getHint().toString();
+    }
+
+    @Override
+    protected void onFocusChanged(boolean focused, int direction, Rect previouslyFocusedRect) {
+        if(focused){
+            setHint("");
+        }else {
+            setHint(hint);
+        }
+        super.onFocusChanged(focused, direction, previouslyFocusedRect);
     }
 }
