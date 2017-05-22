@@ -39,6 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_above="@id/login_passowrd"
+
             android:hint="@string/user_name"
             style="@style/MyEditText"/>
         <RelativeLayout
@@ -63,7 +64,7 @@
                 android:layout_toRightOf="@id/login_theamtext"
                 android:textSize="17sp"
                 android:textColor="@color/white"
-                android:text="欢迎登陆喵记本"
+                android:text="欢迎登陆喵记"
                 android:ems="1"/>
         </RelativeLayout>
             <CheckBox

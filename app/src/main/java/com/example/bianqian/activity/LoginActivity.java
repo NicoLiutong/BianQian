@@ -9,8 +9,13 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.example.bianqian.R;
+import com.example.bianqian.db.User;
 import com.example.bianqian.util.AllSharedPreference;
+import com.example.bianqian.util.ShowError;
 import com.example.bianqian.view.LineEditText;
+
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.SaveListener;
 
 public class LoginActivity extends BasicActivity {
 
@@ -106,9 +111,20 @@ public class LoginActivity extends BasicActivity {
                     loginPreference.setPassword("");;
                 }
                 //登陆
-
-
-
+                User user = new User();
+                user.setUsername(userNmae);
+                user.setPassword(password);
+                user.login(new SaveListener<User>() {
+                    @Override
+                    public void done(User user, BmobException e) {
+                        if(e == null){
+                            ShowToast("登陆成功");
+                            //进入主activity
+                        }else {
+                            ShowToast(ShowError.showError(e));
+                        }
+                    }
+                });
             }
         });
     }
@@ -117,5 +133,6 @@ public class LoginActivity extends BasicActivity {
     public void initData() {
         automaticLogin = automaticLoginChenkBox.isChecked();
         passwordEdit.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        userNameEdit.requestFocus();
     }
 }
