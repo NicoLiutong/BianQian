@@ -133,6 +133,7 @@ public class LoginActivity extends BasicActivity {
     public void initData() {
         automaticLogin = automaticLoginChenkBox.isChecked();
         passwordEdit.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_VARIATION_PASSWORD);
-        userNameEdit.requestFocus();
+        userNameEdit.clearFocus();
+        passwordEdit.clearFocus();
     }
 }
