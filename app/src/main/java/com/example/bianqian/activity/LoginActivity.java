@@ -119,6 +119,9 @@ public class LoginActivity extends BasicActivity {
                     public void done(User user, BmobException e) {
                         if(e == null){
                             ShowToast("登陆成功");
+                            Intent intent = new Intent(LoginActivity.this,ApplicationMainActivity.class);
+                            LoginActivity.this.startActivity(intent);
+                            finish();
                             //进入主activity
                         }else {
                             ShowToast(ShowError.showError(e));
@@ -128,12 +131,11 @@ public class LoginActivity extends BasicActivity {
             }
         });
     }
-
     @Override
     public void initData() {
         automaticLogin = automaticLoginChenkBox.isChecked();
         passwordEdit.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_VARIATION_PASSWORD);
-        userNameEdit.clearFocus();
         passwordEdit.clearFocus();
+
     }
 }

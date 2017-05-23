@@ -80,6 +80,7 @@ public class RegisterActivity extends BasicActivity {
                                     user.setUsername(emailEdit.getText().toString());
                                     user.setEmail(emailEdit.getText().toString());
                                     user.setPassword(passwordEdit.getText().toString());
+                                    user.setIndividualitySignature("这个人好懒，神马都没有");
                                     user.setSex(" ");
                                     user.setUesrImage(file);
                                     user.signUp(new SaveListener<User>() {
