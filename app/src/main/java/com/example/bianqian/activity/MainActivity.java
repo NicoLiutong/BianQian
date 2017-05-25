@@ -12,7 +12,7 @@ import cn.bmob.v3.BmobUser;
 
 public class MainActivity extends BasicActivity {
 
-    private static final int GO_HOME = 100;
+    private static final int GO_HOME = 0;
 
     @Override
     public void setContentView() {
@@ -32,7 +32,6 @@ public class MainActivity extends BasicActivity {
     @Override
     public void initData() {
         mHandler.sendEmptyMessageDelayed(GO_HOME, 3000);
-
     }
     public void goHome() {
         AllSharedPreference preference = new AllSharedPreference(this);

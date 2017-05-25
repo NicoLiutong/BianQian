@@ -1,30 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <group android:checkableBehavior="single">
+    <group android:id="@+id/ground1"
+        android:checkableBehavior="single">
         <item android:id="@+id/menu_important_message"
               android:icon="@drawable/ic_menu_important"
-              android:title="重要记录"/>
+              android:title="@string/important_message"/>
         <item android:id="@+id/menu_all_message"
               android:icon="@drawable/ic_menu_normal"
-              android:title="所有记录"/>
+              android:title="@string/normal_message"/>
         <item android:id="@+id/menu_fovourt_message"
-              android:icon="@drawable/ic_menu_favourt"
-              android:title="收藏的记录"/>
+              android:icon="@drawable/ic_menu_all"
+              android:title="@string/all_message"/>
     </group>
 
-    <group>
+    <group android:id="@+id/ground2">
         <item android:id="@+id/menu_setting"
               android:icon="@drawable/ic_menu_setting"
-              android:title="设置"/>
-    </group>
-
-    <group>
+              android:title="@string/setting"/>
         <item android:id="@+id/menu_update_application"
               android:icon="@drawable/ic_menu_refresh"
-              android:title="检查更新"/>
-
-
-
+              android:title="@string/update_application"/>
     </group>
 
 </menu>

@@ -6,14 +6,11 @@ import android.widget.TextView;
 
 import com.example.bianqian.R;
 import com.example.bianqian.db.User;
+import com.example.bianqian.util.PictureOperation;
 import com.example.bianqian.util.ShowError;
 import com.example.bianqian.view.LineEditText;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
@@ -66,9 +63,7 @@ public class RegisterActivity extends BasicActivity {
             public void onClick(View v) {
                 if(passwordEdit.getText().toString().length() >= 4 && passwordEdit.getText().toString().length() <= 16) {
                     if (passwordEdit.getText().toString().equals(confirmPasswordEdit.getText().toString())) {
-                        if (!hasExternalStaragePrivateFile()) {
-                            creatExternalStaragePrivateFile();
-                        }
+                        PictureOperation.creatExternalStaragePrivateFile(RegisterActivity.this);
                         //注册,设定图片路径
                         final BmobFile file = new BmobFile(new File(getExternalFilesDir(null), "user_picture.jpg"));
                         final User user = new User();
@@ -120,29 +115,6 @@ public class RegisterActivity extends BasicActivity {
     @Override
     public void initData() {
         titleText.setText("注册");
-
     }
 
-    private boolean hasExternalStaragePrivateFile(){
-        File file = new File(getExternalFilesDir(null),"user_picture.jpg");
-        if(file != null){
-            return file.exists();
-        }
-        return false;
-    }
-
-    private void creatExternalStaragePrivateFile(){
-        File file = new File(getExternalFilesDir(null),"user_picture.jpg");
-        try{
-            InputStream is = RegisterActivity.this.getResources().getAssets().open("user_picture.jpg");
-            OutputStream os = new FileOutputStream(file);
-            byte[] date = new byte[is.available()];
-            is.read(date);
-            os.write(date);
-            is.close();
-            os.close();
-        }catch (IOException e){
-            e.printStackTrace();
-        }
-    }
 }
