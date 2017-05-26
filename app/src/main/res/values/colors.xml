@@ -10,4 +10,6 @@
     <color name="blue">#0084ff</color>
     <color name="buttoncolor">#FF4081</color>
     <color name="gray">#777777</color>
+    <color name="black">#000000</color>
+    <color name="red">#ff0000</color>
 </resources>

@@ -5,10 +5,10 @@
         <item android:id="@+id/menu_important_message"
               android:icon="@drawable/ic_menu_important"
               android:title="@string/important_message"/>
-        <item android:id="@+id/menu_all_message"
+        <item android:id="@+id/menu_normal_message"
               android:icon="@drawable/ic_menu_normal"
               android:title="@string/normal_message"/>
-        <item android:id="@+id/menu_fovourt_message"
+        <item android:id="@+id/menu_all_message"
               android:icon="@drawable/ic_menu_all"
               android:title="@string/all_message"/>
     </group>

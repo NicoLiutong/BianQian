@@ -41,6 +41,8 @@
         </activity>
         <activity android:name=".activity.ApplicationMainActivity">
         </activity>
+        <activity android:name=".activity.UserMessageActivity">
+        </activity>
     </application>
 
 </manifest>
