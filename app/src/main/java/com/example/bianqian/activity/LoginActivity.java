@@ -38,6 +38,8 @@ public class LoginActivity extends BasicActivity {
     private String password = "";
 
     private boolean automaticLogin = false;
+
+    private AllSharedPreference loginPreference;
     @Override
     public void setContentView() {
         setContentView(R.layout.activity_login);
@@ -100,15 +102,10 @@ public class LoginActivity extends BasicActivity {
             public void onClick(View v) {
                 userNmae = userNameEdit.getText().toString();
                 password = passwordEdit.getText().toString();
-                AllSharedPreference loginPreference = new AllSharedPreference(LoginActivity.this);
                 if(automaticLogin){
                     loginPreference.setAutomaticLogin(true);
                     loginPreference.setUserName(userNmae);
                     loginPreference.setPassword(password);
-                }else {
-                    loginPreference.setAutomaticLogin(false);
-                    loginPreference.setUserName("");
-                    loginPreference.setPassword("");;
                 }
                 //登陆
                 User user = new User();
@@ -135,6 +132,9 @@ public class LoginActivity extends BasicActivity {
     public void initData() {
         automaticLogin = automaticLoginChenkBox.isChecked();
         passwordEdit.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_VARIATION_PASSWORD);
-
+        loginPreference = new AllSharedPreference(LoginActivity.this);
+        loginPreference.setAutomaticLogin(false);
+        loginPreference.setUserName("");
+        loginPreference.setPassword("");
     }
 }

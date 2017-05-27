@@ -92,19 +92,18 @@
             android:layout_alignParentLeft="true"
             android:textColor="@color/black"
             />
-        <TextView
-            android:id="@+id/user_message_individuality"
-            style="@style/userMessageText"
-            android:layout_alignParentRight="true"
-            android:textColor="@color/gray"
-            />
-        <View
-            style="@style/userMessageLine"
-            />
     </RelativeLayout>
+    <TextView
+        android:id="@+id/user_message_individuality"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:textSize="20sp"
+        android:textColor="@color/gray"
+        />
 
     <Button
-    android:id="@+id/change_password"
+    android:id="@+id/change_password_button"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:text="@string/change_password"
@@ -115,10 +114,10 @@
     />
 
     <Button
-        android:id="@+id/exit"
+        android:id="@+id/logout_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/exit"
+        android:text="@string/logout"
         android:layout_marginTop="20dp"
         android:textColor="@color/white"
         android:textSize="20sp"
