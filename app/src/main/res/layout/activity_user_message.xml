@@ -79,9 +79,9 @@
             style="@style/userMessageLine"
             />
     </RelativeLayout>
-<!--
+
     <RelativeLayout
-        android:id="@+id/user_message_email_verified_layout"
+        android:id="@+id/user_message_verified_layout"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="@color/white"
@@ -102,7 +102,7 @@
         style="@style/userMessageLine"
         />
 </RelativeLayout>
--->
+
 <RelativeLayout
         android:id="@+id/user_message_individuality_layout"
         android:layout_width="match_parent"
@@ -121,6 +121,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:textSize="20sp"
         android:textColor="@color/gray"
         />

@@ -12,8 +12,11 @@ import com.bumptech.glide.Glide;
 import com.example.bianqian.R;
 import com.example.bianqian.db.User;
 import com.example.bianqian.util.AllStatic;
+import com.example.bianqian.util.ShowError;
 
 import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.UpdateListener;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class UserMessageActivity extends BasicActivity implements View.OnClickListener {
@@ -36,9 +39,9 @@ public class UserMessageActivity extends BasicActivity implements View.OnClickLi
 
     private TextView userSex;
 
-   // private RelativeLayout userEmailVerifiedLayout;
+    private RelativeLayout userEmailVerifiedLayout;
 
-   // private TextView userEmailVerified;
+    private TextView userEmailVerified;
 
     private RelativeLayout userIndividualityLayout;
 
@@ -48,9 +51,9 @@ public class UserMessageActivity extends BasicActivity implements View.OnClickLi
 
     private Button logoutButton;
 
-   // private boolean emailVerified;
+    private boolean emailVerified;
 
-    //private String userEmail;
+    private String userEmail;
 
     @Override
     public void setContentView() {
@@ -68,8 +71,8 @@ public class UserMessageActivity extends BasicActivity implements View.OnClickLi
         userNmae = (TextView) findViewById(R.id.user_message_name);
         userSexLayout = (RelativeLayout) findViewById(R.id.user_message_sex_layout);
         userSex = (TextView) findViewById(R.id.user_message_sex);
-       /* userEmailVerifiedLayout = (RelativeLayout) findViewById(R.id.user_message_email_verified_layout);
-        userEmailVerified = (TextView) findViewById(R.id.user_email_verified);*/
+        userEmailVerifiedLayout = (RelativeLayout) findViewById(R.id.user_message_verified_layout);
+        userEmailVerified = (TextView) findViewById(R.id.user_email_verified);
         userIndividualityLayout = (RelativeLayout) findViewById(R.id.user_message_individuality_layout);
         userIndividuality = (TextView) findViewById(R.id.user_message_individuality);
         changePasswordButton = (Button) findViewById(R.id.change_password_button);
@@ -84,7 +87,7 @@ public class UserMessageActivity extends BasicActivity implements View.OnClickLi
         userPictureLayout.setOnClickListener(this);
         userNameLayout.setOnClickListener(this);
         userSexLayout.setOnClickListener(this);
-       // userEmailVerifiedLayout.setOnClickListener(this);
+        userEmailVerifiedLayout.setOnClickListener(this);
         userIndividualityLayout.setOnClickListener(this);
     }
 
@@ -101,13 +104,13 @@ public class UserMessageActivity extends BasicActivity implements View.OnClickLi
         Glide.with(UserMessageActivity.this).load(user.getUesrImage().getUrl()).into(userPicture);
         userNmae.setText(user.getMyUsername());
         userSex.setText(user.getSex());
-        /*emailVerified = user.getEmailVerified();
+        emailVerified = user.getEmailVerified();
         userEmail = user.getEmail();
         if(emailVerified){
             userEmailVerified.setText("已验证");
         }else {
             userEmailVerified.setText("未验证");
-        }*/
+        }
         userIndividuality.setText(user.getIndividuality());
     }
 
@@ -126,7 +129,7 @@ public class UserMessageActivity extends BasicActivity implements View.OnClickLi
             case R.id.user_message_sex_layout:
                 //修改性别
                 break;
-            /*case R.id.user_message_email_verified_layout:
+            case R.id.user_message_verified_layout:
                 if(emailVerified){
                     ShowToast("已验证，请不要重复验证");
                 }else {
@@ -141,7 +144,7 @@ public class UserMessageActivity extends BasicActivity implements View.OnClickLi
                         }
                     });
                 }
-                break;*/
+                break;
             case R.id.user_message_individuality_layout:
                 startChangeActivity(AllStatic.CHANGETAG,AllStatic.CHANGEINDIVIDUALITY);
                 break;
