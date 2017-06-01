@@ -121,7 +121,7 @@ public class ApplicationMainActivity extends BasicActivity {
             isLogin = true;
         Glide.with(ApplicationMainActivity.this).load(user.getUesrImage().getUrl()).into(userPicture);
         userName.setText(user.getMyUsername());
-        userIndividuality.setText(user.getIndividualitySignature());
+        userIndividuality.setText(user.getIndividuality());
         }else {
             isLogin = false;
             Glide.with(ApplicationMainActivity.this).load(R.drawable.user_picture).into(userPicture);

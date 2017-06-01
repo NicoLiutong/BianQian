@@ -15,14 +15,14 @@ public class User extends BmobUser {
 
     private BmobFile uesrImage;
 
-    private String individualitySignature;
+    private String individuality;
 
-    public String getIndividualitySignature() {
-        return individualitySignature;
+    public String getIndividuality() {
+        return individuality;
     }
 
-    public void setIndividualitySignature(String individualitySignature) {
-        this.individualitySignature = individualitySignature;
+    public void setIndividuality(String individuality) {
+        this.individuality = individuality;
     }
 
     public BmobFile getUesrImage() {

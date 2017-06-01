@@ -79,8 +79,31 @@
             style="@style/userMessageLine"
             />
     </RelativeLayout>
-
+<!--
     <RelativeLayout
+        android:id="@+id/user_message_email_verified_layout"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/white"
+        >
+    <TextView
+        style="@style/userMessageText"
+        android:text="邮箱验证"
+        android:layout_alignParentLeft="true"
+        android:textColor="@color/black"
+        />
+    <TextView
+        android:id="@+id/user_email_verified"
+        style="@style/userMessageText"
+        android:layout_alignParentRight="true"
+        android:textColor="@color/gray"
+        />
+    <View
+        style="@style/userMessageLine"
+        />
+</RelativeLayout>
+-->
+<RelativeLayout
         android:id="@+id/user_message_individuality_layout"
         android:layout_width="match_parent"
         android:layout_height="60dp"
