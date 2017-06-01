@@ -1,7 +1,9 @@
 package com.example.bianqian.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -121,13 +123,48 @@ public class UserMessageActivity extends BasicActivity implements View.OnClickLi
                 finish();
                 break;
             case R.id.user_message_picture_layout:
+                AlertDialog.Builder pictureBuilder = new AlertDialog.Builder(UserMessageActivity.this,R.style.MyDialog);
+                final String[] choosePicture = {"拍照","相册"};
+                pictureBuilder.setItems(choosePicture, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, final int which) {
+                        if(choosePicture[which].equals("拍照")){
+                            //处理拍照
+                            ShowToast("拍照");
+                        }else {
+                            //处理相册
+                            ShowToast("相册");
+                        }
+                    }
+                });
+                pictureBuilder.show();
                 //更改图像
                 break;
             case R.id.user_message_name_layout:
                 startChangeActivity(AllStatic.CHANGETAG,AllStatic.CHANGENAME);
                 break;
             case R.id.user_message_sex_layout:
-                //修改性别
+                AlertDialog.Builder sexBuilder = new AlertDialog.Builder(UserMessageActivity.this,R.style.MyDialog);
+                final String[] sexs = {"男","女","未知生物"};
+                sexBuilder.setItems(sexs, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, final int which) {
+                        User user = new User();
+                        user.setSex(sexs[which]);
+                        BmobUser bmobUser = BmobUser.getCurrentUser(User.class);
+                        user.update(bmobUser.getObjectId(), new UpdateListener() {
+                            @Override
+                            public void done(BmobException e) {
+                                if(e == null){
+                                    userSex.setText(sexs[which]);
+                                }else {
+                                    ShowToast(ShowError.showError(e));
+                                }
+                            }
+                        });
+                    }
+                });
+                sexBuilder.show();
                 break;
             case R.id.user_message_verified_layout:
                 if(emailVerified){
