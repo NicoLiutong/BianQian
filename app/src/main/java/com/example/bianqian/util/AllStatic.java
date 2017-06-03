@@ -6,7 +6,9 @@ package com.example.bianqian.util;
 
 public class AllStatic {
 
-    public static final String CHANGEPICTURE = "changepicture";
+    public static final String CHANGECAMERPICTURE = "changecamerpicture";
+
+    public static final String CHANGEPHOTOPICTURE = "changephotopicture";
 
     public static final String CHANGETAG = "tag";
 

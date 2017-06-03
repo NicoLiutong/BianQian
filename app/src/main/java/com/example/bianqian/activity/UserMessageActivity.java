@@ -16,6 +16,7 @@ import com.example.bianqian.db.User;
 import com.example.bianqian.util.AllStatic;
 import com.example.bianqian.util.ShowError;
 
+import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.UpdateListener;
@@ -107,6 +108,7 @@ public class UserMessageActivity extends BasicActivity implements View.OnClickLi
         userNmae.setText(user.getMyUsername());
         userSex.setText(user.getSex());
         emailVerified = user.getEmailVerified();
+        BmobQuery<User> query = new BmobQuery<User>();
         userEmail = user.getEmail();
         if(emailVerified){
             userEmailVerified.setText("已验证");
@@ -130,10 +132,10 @@ public class UserMessageActivity extends BasicActivity implements View.OnClickLi
                     public void onClick(DialogInterface dialog, final int which) {
                         if(choosePicture[which].equals("拍照")){
                             //处理拍照
-                            ShowToast("拍照");
+                            startChangeActivity(AllStatic.CHANGETAG,AllStatic.CHANGECAMERPICTURE);
                         }else {
                             //处理相册
-                            ShowToast("相册");
+                            startChangeActivity(AllStatic.CHANGETAG,AllStatic.CHANGEPHOTOPICTURE);
                         }
                     }
                 });
@@ -174,7 +176,8 @@ public class UserMessageActivity extends BasicActivity implements View.OnClickLi
                         @Override
                         public void done(BmobException e) {
                             if(e == null){
-                                ShowToast("请求验证邮件成功，请到" + userEmail + "邮箱中进行激活。");
+                                ShowToast("请到"+ userEmail + "邮箱验证，验证后请重新登陆。");
+
                             }else {
                                 ShowToast(ShowError.showError(e));
                             }

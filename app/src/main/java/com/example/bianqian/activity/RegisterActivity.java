@@ -1,5 +1,6 @@
 package com.example.bianqian.activity;
 
+import android.app.ProgressDialog;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -61,6 +62,7 @@ public class RegisterActivity extends BasicActivity {
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                final ProgressDialog dialog = ProgressDialog.show(RegisterActivity.this, null, "正在注册，请稍后…", true, false);
                 if(passwordEdit.getText().toString().length() >= 4 && passwordEdit.getText().toString().length() <= 16) {
                     if (passwordEdit.getText().toString().equals(confirmPasswordEdit.getText().toString())) {
                         PictureOperation.creatExternalStaragePrivateFile(RegisterActivity.this);
@@ -83,8 +85,10 @@ public class RegisterActivity extends BasicActivity {
                                         public void done(User user, BmobException e) {
                                             if (e == null) {
                                                 ShowToast("注册成功,请去邮箱验证");
+                                                dialog.dismiss();
                                                 finish();
                                             } else {
+                                                dialog.dismiss();
                                                 ShowToast(ShowError.showError(e));
                                                 BmobFile deletFile = new BmobFile();
                                                 deletFile.setUrl(file.getUrl());
@@ -97,6 +101,7 @@ public class RegisterActivity extends BasicActivity {
                                         }
                                     });
                                 } else {
+                                    dialog.dismiss();
                                     ShowToast(ShowError.showError(e));
                                 }
                             }

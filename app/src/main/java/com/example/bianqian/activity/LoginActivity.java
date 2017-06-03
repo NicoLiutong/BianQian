@@ -1,5 +1,6 @@
 package com.example.bianqian.activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.text.InputType;
 import android.view.View;
@@ -108,6 +109,7 @@ public class LoginActivity extends BasicActivity {
                     loginPreference.setPassword(password);
                 }
                 //登陆
+                final ProgressDialog dialog = ProgressDialog.show(LoginActivity.this, null, "登陆中…", true, false);
                 User user = new User();
                 user.setUsername(userNmae);
                 user.setPassword(password);
@@ -116,11 +118,13 @@ public class LoginActivity extends BasicActivity {
                     public void done(User user, BmobException e) {
                         if(e == null){
                             ShowToast("登陆成功");
+                            dialog.dismiss();
                             Intent intent = new Intent(LoginActivity.this,ApplicationMainActivity.class);
                             LoginActivity.this.startActivity(intent);
                             finish();
                             //进入主activity
                         }else {
+                            dialog.dismiss();
                             ShowToast(ShowError.showError(e));
                         }
                     }
