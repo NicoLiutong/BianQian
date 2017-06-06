@@ -63,16 +63,22 @@ public class RegisterActivity extends BasicActivity {
             @Override
             public void onClick(View v) {
                 final ProgressDialog dialog = ProgressDialog.show(RegisterActivity.this, null, "正在注册，请稍后…", true, false);
+                //判断密码是否为4-16个字符
                 if(passwordEdit.getText().toString().length() >= 4 && passwordEdit.getText().toString().length() <= 16) {
+                    //判断确认密码和密码是否一样
                     if (passwordEdit.getText().toString().equals(confirmPasswordEdit.getText().toString())) {
+                        //将用户的初始头像放于（getExternalFilesDir(null), "user_picture.jpg"）路径下
                         PictureOperation.creatExternalStaragePrivateFile(RegisterActivity.this);
-                        //注册,设定图片路径
+                        //设置图片的路径
                         final BmobFile file = new BmobFile(new File(getExternalFilesDir(null), "user_picture.jpg"));
+                        //创建user
                         final User user = new User();
+                        //先上传头像，头像上传成功后才可以注册
                         file.uploadblock(new UploadFileListener() {
                             @Override
                             public void done(BmobException e) {
                                 if (e == null) {
+                                    //头像上传成功后进行注册，设置相应的信息
                                     user.setMyUsername(userNameEdit.getText().toString());
                                     user.setUsername(emailEdit.getText().toString());
                                     user.setEmail(emailEdit.getText().toString());
@@ -84,10 +90,12 @@ public class RegisterActivity extends BasicActivity {
                                         @Override
                                         public void done(User user, BmobException e) {
                                             if (e == null) {
+                                                //注册成功
                                                 ShowToast("注册成功,请去邮箱验证");
                                                 dialog.dismiss();
                                                 finish();
                                             } else {
+                                                //注册失败要删除上传的头像，否则会重复上传
                                                 dialog.dismiss();
                                                 ShowToast(ShowError.showError(e));
                                                 BmobFile deletFile = new BmobFile();
@@ -101,6 +109,7 @@ public class RegisterActivity extends BasicActivity {
                                         }
                                     });
                                 } else {
+                                    //头像上传失败
                                     dialog.dismiss();
                                     ShowToast(ShowError.showError(e));
                                 }

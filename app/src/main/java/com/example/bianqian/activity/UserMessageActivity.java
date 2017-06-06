@@ -16,7 +16,6 @@ import com.example.bianqian.db.User;
 import com.example.bianqian.util.AllStatic;
 import com.example.bianqian.util.ShowError;
 
-import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.UpdateListener;
@@ -103,12 +102,12 @@ public class UserMessageActivity extends BasicActivity implements View.OnClickLi
     @Override
     protected void onStart() {
         super.onStart();
+        //每一次进入都要设置个人信息，获取user，设置头像等信息
         User user = BmobUser.getCurrentUser(User.class);
         Glide.with(UserMessageActivity.this).load(user.getUesrImage().getUrl()).into(userPicture);
         userNmae.setText(user.getMyUsername());
         userSex.setText(user.getSex());
         emailVerified = user.getEmailVerified();
-        BmobQuery<User> query = new BmobQuery<User>();
         userEmail = user.getEmail();
         if(emailVerified){
             userEmailVerified.setText("已验证");
@@ -124,6 +123,7 @@ public class UserMessageActivity extends BasicActivity implements View.OnClickLi
             case R.id.basic_backbutton:
                 finish();
                 break;
+            //点击了头像那栏弹出“拍照”和“相册”选择框，点击进入相应的设置
             case R.id.user_message_picture_layout:
                 AlertDialog.Builder pictureBuilder = new AlertDialog.Builder(UserMessageActivity.this,R.style.MyDialog);
                 final String[] choosePicture = {"拍照","相册"};
@@ -140,11 +140,12 @@ public class UserMessageActivity extends BasicActivity implements View.OnClickLi
                     }
                 });
                 pictureBuilder.show();
-                //更改图像
                 break;
+            //更改名字
             case R.id.user_message_name_layout:
                 startChangeActivity(AllStatic.CHANGETAG,AllStatic.CHANGENAME);
                 break;
+            //更改性别
             case R.id.user_message_sex_layout:
                 AlertDialog.Builder sexBuilder = new AlertDialog.Builder(UserMessageActivity.this,R.style.MyDialog);
                 final String[] sexs = {"男","女","未知生物"};
@@ -168,6 +169,7 @@ public class UserMessageActivity extends BasicActivity implements View.OnClickLi
                 });
                 sexBuilder.show();
                 break;
+            //发送验证
             case R.id.user_message_verified_layout:
                 if(emailVerified){
                     ShowToast("已验证，请不要重复验证");
@@ -185,12 +187,15 @@ public class UserMessageActivity extends BasicActivity implements View.OnClickLi
                     });
                 }
                 break;
+            //更改签名
             case R.id.user_message_individuality_layout:
                 startChangeActivity(AllStatic.CHANGETAG,AllStatic.CHANGEINDIVIDUALITY);
                 break;
+            //更改密码
             case R.id.change_password_button:
                 startChangeActivity(AllStatic.CHANGETAG,AllStatic.CHANGEPASSWORD);
                 break;
+            //退出登录
             case R.id.logout_button:
                 User user = BmobUser.getCurrentUser(User.class);
                 user.logOut();

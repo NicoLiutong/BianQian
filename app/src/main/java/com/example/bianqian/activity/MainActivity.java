@@ -31,8 +31,10 @@ public class MainActivity extends BasicActivity {
 
     @Override
     public void initData() {
+        //直接发送一条3秒后执行的消息
         mHandler.sendEmptyMessageDelayed(GO_HOME, 3000);
     }
+    //先判断是否记住密码，如果记住了然后再获取user，如果user存在则直接进入主界面，不存在进入login界面
     public void goHome() {
         AllSharedPreference preference = new AllSharedPreference(this);
         if(preference.getAutomaticLogin()){
@@ -54,6 +56,7 @@ public class MainActivity extends BasicActivity {
     }
 
     private Handler mHandler = new Handler() {
+        //接收到消息后开始执行gohome（）
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {

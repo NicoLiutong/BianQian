@@ -24,16 +24,20 @@ public abstract class BasicActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView();
         Bmob.initialize(this,"3da138f19a8d8a32a5a64ac1c4e740df");
-
+        //初始化view
         initViews();
+        //初始化数据
         initData();
+        //初始化监听
         initListeners();
+        //打开新的activity会将其本身加入list
         addActivity(this);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        //关闭activity会将其本身移除
         removeActivity(this);
     }
 
@@ -58,7 +62,7 @@ public abstract class BasicActivity extends AppCompatActivity {
     public abstract void initData();
 
     Toast mToast;
-
+    //进行toast弹出对话框的封装
     public void ShowToast(String text) {
         if (!TextUtils.isEmpty(text)) {
             if (mToast == null) {
@@ -78,7 +82,7 @@ public abstract class BasicActivity extends AppCompatActivity {
     public static void removeActivity(Activity activity){
         activities.remove(activity);
     }
-
+    //移除所有的activity
     public static void finishAll(){
         for(Activity activity:activities){
             activity.finish();

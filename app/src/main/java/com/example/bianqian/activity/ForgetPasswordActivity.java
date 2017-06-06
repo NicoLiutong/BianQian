@@ -46,6 +46,7 @@ public class ForgetPasswordActivity extends BasicActivity{
         forgetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //重置密码，获取email然后发送重置请求
                 final String email = forgetEmail.getText().toString();
                 User.resetPasswordByEmail(email, new UpdateListener() {
                     @Override

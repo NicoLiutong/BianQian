@@ -219,7 +219,7 @@ public class ChangeUserMessageActivity extends BasicActivity implements EasyPerm
                                         dialog.dismiss();
                                         Intent intent = new Intent(ChangeUserMessageActivity.this, LoginActivity.class);
                                         ChangeUserMessageActivity.this.startActivity(intent);
-                                        finish();
+                                        finishAll();
                                     } else {
                                         dialog.dismiss();
                                         ShowToast(ShowError.showError(e));

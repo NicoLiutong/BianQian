@@ -59,6 +59,7 @@ public class LoginActivity extends BasicActivity {
 
     @Override
     public void initListeners() {
+        //是否可见密码设置，改变passwordEdit的输入类型
         canSeePasswordCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -69,7 +70,7 @@ public class LoginActivity extends BasicActivity {
                 }
             }
         });
-
+        //是否记住密码：如果选择记住将automaticLogin设置为true；否则设置为false，然后在登陆按钮点击的时候根据此值对其进行相应设置
         automaticLoginChenkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -80,7 +81,7 @@ public class LoginActivity extends BasicActivity {
                 }
             }
         });
-
+        //忘记密码直接进入忘记密码界面
         forgetPasswordText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -89,7 +90,7 @@ public class LoginActivity extends BasicActivity {
 
             }
         });
-
+        //注册直接进入注册界面
         registerText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -97,7 +98,7 @@ public class LoginActivity extends BasicActivity {
                 LoginActivity.this.startActivity(intent);
             }
         });
-
+        //登陆按钮，先获取输入的账号和密码，然后判断automiatiLogin是否为true，并对preference进行相应设置，最后进行登陆
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
