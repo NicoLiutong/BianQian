@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">BianQian</string>
+    <string name="app_name">喵记</string>
     <string name="title_activity_login">Sign in</string>
 
     <!--Login-->

@@ -34,7 +34,7 @@ public class LoginActivity extends BasicActivity {
 
     private TextView registerText;
 
-    private String userNmae = "";
+    private String userName = "";
 
     private String password = "";
 
@@ -102,17 +102,17 @@ public class LoginActivity extends BasicActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                userNmae = userNameEdit.getText().toString();
+                userName = userNameEdit.getText().toString();
                 password = passwordEdit.getText().toString();
                 if(automaticLogin){
                     loginPreference.setAutomaticLogin(true);
-                    loginPreference.setUserName(userNmae);
+                    loginPreference.setUserName(userName);
                     loginPreference.setPassword(password);
                 }
                 //登陆
                 final ProgressDialog dialog = ProgressDialog.show(LoginActivity.this, null, "登陆中…", true, false);
                 User user = new User();
-                user.setUsername(userNmae);
+                user.setUsername(userName);
                 user.setPassword(password);
                 user.login(new SaveListener<User>() {
                     @Override

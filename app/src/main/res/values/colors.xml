@@ -13,4 +13,5 @@
     <color name="black">#000000</color>
     <color name="red">#ff0000</color>
     <color name="green">#00a42c</color>
+    <color name="affirm_color">#e2e2e2</color>
 </resources>

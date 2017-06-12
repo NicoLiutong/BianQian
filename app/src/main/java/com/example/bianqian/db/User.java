@@ -15,7 +15,17 @@ public class User extends BmobUser {
 
     private BmobFile uesrImage;
 
+    private String birthday;
+
     private String individuality;
+
+    public String getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(String birthday) {
+        this.birthday = birthday;
+    }
 
     public String getIndividuality() {
         return individuality;
