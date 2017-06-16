@@ -1,4 +1,4 @@
-package com.example.bianqian.activity;
+package com.example.bianqian.activity.userabout;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -10,6 +10,8 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.example.bianqian.R;
+import com.example.bianqian.activity.ApplicationMainActivity;
+import com.example.bianqian.activity.BasicActivity;
 import com.example.bianqian.db.User;
 import com.example.bianqian.util.AllSharedPreference;
 import com.example.bianqian.util.ShowError;
@@ -20,19 +22,13 @@ import cn.bmob.v3.listener.SaveListener;
 
 public class LoginActivity extends BasicActivity {
 
-    private LineEditText userNameEdit;
+    private LineEditText userNameEdit, passwordEdit;
 
-    private LineEditText passwordEdit;
+    private CheckBox canSeePasswordCheckBox, automaticLoginChenkBox;
 
-    private CheckBox canSeePasswordCheckBox;
-
-    private CheckBox automaticLoginChenkBox;
-
-    private TextView forgetPasswordText;
+    private TextView forgetPasswordText, registerText;
 
     private Button loginButton;
-
-    private TextView registerText;
 
     private String userName = "";
 

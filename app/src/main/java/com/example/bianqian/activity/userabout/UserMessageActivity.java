@@ -1,4 +1,4 @@
-package com.example.bianqian.activity;
+package com.example.bianqian.activity.userabout;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.bianqian.R;
+import com.example.bianqian.activity.BasicActivity;
 import com.example.bianqian.db.User;
 import com.example.bianqian.util.AllStatic;
 import com.example.bianqian.util.ShowError;
@@ -189,8 +190,6 @@ public class UserMessageActivity extends BasicActivity implements View.OnClickLi
                         if(e == null){
                             userSex.setText(sexs[which]);
                         }else {
-                            User user = BmobUser.getCurrentUser(User.class);
-                            userSex.setText(user.getSex());
                             ShowToast(ShowError.showError(e));
                         }
                     }
@@ -222,10 +221,7 @@ public class UserMessageActivity extends BasicActivity implements View.OnClickLi
                     public void done(BmobException e) {
                         if(e == null){
                             userBirthday.setText(year + "-" + mounth + "-" + day);
-                            ShowToast("生日修改成功");
                         }else {
-                            User user = BmobUser.getCurrentUser(User.class);
-                            userBirthday.setText(user.getBirthday());
                             ShowToast(ShowError.showError(e));
                         }
                     }

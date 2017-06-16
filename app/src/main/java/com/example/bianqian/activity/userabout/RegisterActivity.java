@@ -1,4 +1,4 @@
-package com.example.bianqian.activity;
+package com.example.bianqian.activity.userabout;
 
 import android.app.ProgressDialog;
 import android.view.View;
@@ -6,6 +6,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.bianqian.R;
+import com.example.bianqian.activity.BasicActivity;
 import com.example.bianqian.db.User;
 import com.example.bianqian.util.PictureOperation;
 import com.example.bianqian.util.ShowError;
@@ -25,13 +26,7 @@ public class RegisterActivity extends BasicActivity {
 
     private TextView titleText;
 
-    private LineEditText userNameEdit;
-
-    private LineEditText emailEdit;
-
-    private LineEditText passwordEdit;
-
-    private LineEditText confirmPasswordEdit;
+    private LineEditText userNameEdit, emailEdit, passwordEdit, confirmPasswordEdit;
 
     private Button registerButton;
 

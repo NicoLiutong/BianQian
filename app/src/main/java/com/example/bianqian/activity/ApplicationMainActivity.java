@@ -16,6 +16,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.bianqian.R;
+import com.example.bianqian.activity.userabout.LoginActivity;
+import com.example.bianqian.activity.userabout.UserMessageActivity;
 import com.example.bianqian.db.User;
 
 import cn.bmob.v3.BmobUser;
@@ -28,9 +30,7 @@ public class ApplicationMainActivity extends BasicActivity {
 
     private ImageView userPicture;
 
-    private TextView userName;
-
-    private TextView userIndividuality;
+    private TextView userName, userIndividuality;
 
     private NavigationView navigationView;
 
@@ -96,15 +96,31 @@ public class ApplicationMainActivity extends BasicActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()){
-                    case R.id.menu_important_message:
-                        ShowToast("重要记录");
+                    case R.id.menu_red:
+                        ShowToast("姨妈红");
                         break;
-                    case R.id.menu_normal_message:
-                        ShowToast("普通记录");
+                    case R.id.menu_pink:
+                        ShowToast("少女粉");
                         break;
-                    case R.id.menu_all_message:
-                        ShowToast("所有记录");
+                    case R.id.menu_yellow:
+                        ShowToast("咸蛋黄");
                         break;
+                    case R.id.menu_green:
+                        ShowToast("早苗绿");
+                        break;
+                    case R.id.menu_blue:
+                        ShowToast("胖次蓝");
+                        break;
+                    case R.id.menu_purple:
+                        ShowToast("基佬紫");
+                        break;
+                    case R.id.menu_gray:
+                        ShowToast("暗夜灰");
+                        break;
+                    case R.id.menu_all:
+                        ShowToast("缤纷彩");
+                        break;
+
                     case R.id.menu_setting:
                         ShowToast("设置");
                         break;
@@ -119,7 +135,7 @@ public class ApplicationMainActivity extends BasicActivity {
 
     @Override
     public void initData() {
-
+        navigationView.setItemIconTintList(null);
     }
     //每次进入该页面都要初始的一些个人信息
     @Override

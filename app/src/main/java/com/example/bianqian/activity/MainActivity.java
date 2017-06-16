@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Message;
 
 import com.example.bianqian.R;
+import com.example.bianqian.activity.userabout.LoginActivity;
 import com.example.bianqian.db.User;
 import com.example.bianqian.util.AllSharedPreference;
 import com.example.bianqian.util.ShowError;

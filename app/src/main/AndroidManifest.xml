@@ -35,17 +35,17 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".activity.LoginActivity">
+        <activity android:name=".activity.userabout.LoginActivity">
         </activity>
-        <activity android:name=".activity.RegisterActivity">
+        <activity android:name=".activity.userabout.RegisterActivity">
         </activity>
-        <activity android:name=".activity.ForgetPasswordActivity">
+        <activity android:name=".activity.userabout.ForgetPasswordActivity">
         </activity>
         <activity android:name=".activity.ApplicationMainActivity">
         </activity>
-        <activity android:name=".activity.UserMessageActivity">
+        <activity android:name=".activity.userabout.UserMessageActivity">
         </activity>
-        <activity android:name=".activity.ChangeUserMessageActivity">
+        <activity android:name=".activity.userabout.ChangeUserMessageActivity">
         </activity>
 
         <provider

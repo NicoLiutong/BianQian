@@ -1,4 +1,4 @@
-package com.example.bianqian.activity;
+package com.example.bianqian.activity.userabout;
 
 import android.Manifest;
 import android.app.ProgressDialog;
@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.bianqian.R;
+import com.example.bianqian.activity.BasicActivity;
 import com.example.bianqian.db.User;
 import com.example.bianqian.util.AllStatic;
 import com.example.bianqian.util.ShowError;
@@ -38,33 +39,19 @@ import static android.content.Intent.FLAG_GRANT_WRITE_URI_PERMISSION;
 
 public class ChangeUserMessageActivity extends BasicActivity implements EasyPermissions.PermissionCallbacks {
 
-    private Button backButton;
+    private Button backButton, completeButton;
 
-    private TextView titleText;
-
-    private Button completeButton;
+    private TextView titleText, changeMessageItem;
 
     private CropView changeMessagePicture;
 
-    private LinearLayout changeMessageItemLayout;
+    private LinearLayout changeMessageItemLayout, changePasswordLayout;
 
-    private TextView changeMessageItem;
+    private EditText changeMessageContent, oldPassword, newPassword, confirmPassword;
 
-    private EditText changeMessageContent;
-
-    private LinearLayout changePasswordLayout;
-
-    private EditText oldPassword;
-
-    private EditText newPassword;
-
-    private EditText confirmPassword;
-
-    private String type;
+    private String type, camerPathUri;
 
     private String[] perms;
-
-    private String camerPathUri;
 
     private static final int SELECT_THROW_CAMER = 100;
     private static final int SELECT_THROW_PHOTO = 101;

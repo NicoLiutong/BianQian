@@ -20,11 +20,17 @@
     <string name="register_edit_confirm_password">请与密码保持一致</string>
     <string name="register_register">注册</string>
     <string name="forget_password_button">发送验证信息</string>
-    <string name="important_message">重要记录</string>
-    <string name="normal_message">普通记录</string>
-    <string name="all_message">所有记录</string>
     <string name="setting">设置</string>
     <string name="update_application">检查更新</string>
     <string name="change_password">修改密码</string>
     <string name="logout">退出登录</string>
+
+    <string name="red_mood">姨妈红</string>
+    <string name="pink_mood">少女粉</string>
+    <string name="yellow_mood">咸蛋黄</string>
+    <string name="green_mood">早苗绿</string>
+    <string name="blue_mood">胖次蓝</string>
+    <string name="purple_mood">基佬紫</string>
+    <string name="gray_mood">暗夜灰</string>
+    <string name="all_mood">全色彩</string>
 </resources>
