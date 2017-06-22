@@ -33,4 +33,7 @@
     <string name="purple_mood">基佬紫</string>
     <string name="gray_mood">暗夜灰</string>
     <string name="all_mood">全色彩</string>
+
+    <string name="cancle">取消</string>
+    <string name="delet">删除</string>
 </resources>

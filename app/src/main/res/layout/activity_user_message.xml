@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_marginTop="10dp"
-        android:background="@color/white">
+        android:background="@color/affirm_color">
         <TextView
           style="@style/userMessageText"
           android:text="头像"
@@ -38,7 +38,7 @@
         android:id="@+id/user_message_name_layout"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:background="@color/white"
+        android:background="@color/affirm_color"
         >
         <TextView
             style="@style/userMessageText"
@@ -61,7 +61,7 @@
         android:id="@+id/user_message_sex_layout"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:background="@color/white"
+        android:background="@color/affirm_color"
         >
         <TextView
             style="@style/userMessageText"
@@ -84,7 +84,7 @@
         android:id="@+id/user_message_birthday_layout"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:background="@color/white"
+        android:background="@color/affirm_color"
         >
         <TextView
             style="@style/userMessageText"
@@ -107,7 +107,7 @@
         android:id="@+id/user_message_verified_layout"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:background="@color/white"
+        android:background="@color/affirm_color"
         >
     <TextView
         style="@style/userMessageText"
@@ -130,7 +130,7 @@
         android:id="@+id/user_message_individuality_layout"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:background="@color/white"
+        android:background="@color/affirm_color"
         >
         <TextView
             style="@style/userMessageText"

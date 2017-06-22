@@ -20,6 +20,10 @@ public abstract class MyAdapter<T> extends RecyclerView.Adapter<MyViewHolder> {
     protected int viewType;
     protected MultiItemTypeSupport<T> mMultiItemTypeSupport;
 
+    private List<Integer> selectItems;
+
+    private boolean isClickLong = false;
+
     public MyAdapter(Context context,int layoutId,List<T> datas){
         mContext = context;
         mInflater = LayoutInflater.from(context);
@@ -30,6 +34,23 @@ public abstract class MyAdapter<T> extends RecyclerView.Adapter<MyViewHolder> {
     public MyAdapter(Context context,List<T> datas,MultiItemTypeSupport<T> multiItemTypeSupport){
         this(context,-1,datas);
         mMultiItemTypeSupport = multiItemTypeSupport;
+    }
+
+
+    public List<Integer> getSelectItems() {
+        return selectItems;
+    }
+
+    public void setSelectItems(List<Integer> selectItems) {
+        this.selectItems = selectItems;
+    }
+
+    public boolean isClickLong() {
+        return isClickLong;
+    }
+
+    public void setClickLong(boolean clickLong) {
+        isClickLong = clickLong;
     }
 
     @Override
@@ -47,10 +68,10 @@ public abstract class MyAdapter<T> extends RecyclerView.Adapter<MyViewHolder> {
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        convert(holder,viewType,Mdatas.get(position));
+        convert(holder,viewType,Mdatas.get(position), isClickLong());
     }
 
-    public abstract void convert(MyViewHolder holder,int viewType, T t);
+    public abstract void convert(MyViewHolder holder,int viewType, T t, boolean isClickLong);
 
     @Override
     public int getItemCount() {
@@ -64,6 +85,26 @@ public abstract class MyAdapter<T> extends RecyclerView.Adapter<MyViewHolder> {
         }else {
         return super.getItemViewType(position);
         }
+    }
 
+    public boolean isSelectItems(Integer position){
+        return getSelectItems().contains(position);
+    }
+
+    public void switchSelectState(Integer position){
+        if(getSelectItems().contains(position)){
+            selectItems.remove(position);
+        }else {
+            selectItems.add(position);
+        }
+        notifyItemChanged(position);
+    }
+
+    public int getSelectItemCount(){
+        return selectItems.size();
+    }
+
+    public void clearSelectItems(){
+        selectItems.clear();
     }
 }

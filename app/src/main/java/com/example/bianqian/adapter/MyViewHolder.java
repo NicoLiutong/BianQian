@@ -7,6 +7,7 @@ import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 /**
@@ -59,6 +60,12 @@ public class MyViewHolder extends RecyclerView.ViewHolder {
         return this;
     }
 
+    public MyViewHolder setCircleColor(int viewId,int drawable){
+        View view = getView(viewId);
+        view.setBackgroundResource(drawable);
+        return this;
+    }
+
     public MyViewHolder setOnClickListener(int viewId,View.OnClickListener listener){
         View view = getView(viewId);
         view.setOnClickListener(listener);
@@ -71,4 +78,27 @@ public class MyViewHolder extends RecyclerView.ViewHolder {
         return this;
     }
 
+    public MyViewHolder setOnCheckedChangeLister(int viewId, CheckBox.OnCheckedChangeListener listener){
+        CheckBox checkBox = getView(viewId);
+        checkBox.setOnCheckedChangeListener(listener);
+        return this;
+    }
+
+    public MyViewHolder setVisiblity(int viewId){
+        View view = getView(viewId);
+        view.setVisibility(View.VISIBLE);
+        return this;
+    }
+
+    public MyViewHolder setInvisiblity(int viewId){
+        View view = getView(viewId);
+        view.setVisibility(View.INVISIBLE);
+        return this;
+    }
+
+    public MyViewHolder setChecked(int viewId,boolean checked){
+        CheckBox checkBox = getView(viewId);
+        checkBox.setChecked(checked);
+        return this;
+    }
 }
