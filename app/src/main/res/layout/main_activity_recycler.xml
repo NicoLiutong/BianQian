@@ -11,6 +11,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:layout_marginTop="10dp"/>
+
     <LinearLayout
         android:id="@+id/cancle_delet_layout"
         android:layout_margin="5dp"
@@ -22,7 +23,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@color/white"
+            android:background="@color/gray"
             android:text="@string/cancle"
             android:textSize="13sp"
             />

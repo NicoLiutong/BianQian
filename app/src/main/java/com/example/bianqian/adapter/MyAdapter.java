@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,7 +21,7 @@ public abstract class MyAdapter<T> extends RecyclerView.Adapter<MyViewHolder> {
     protected int viewType;
     protected MultiItemTypeSupport<T> mMultiItemTypeSupport;
 
-    private List<Integer> selectItems;
+    private List<Integer> selectItems = new ArrayList<>();
 
     private boolean isClickLong = false;
 
@@ -39,10 +40,6 @@ public abstract class MyAdapter<T> extends RecyclerView.Adapter<MyViewHolder> {
 
     public List<Integer> getSelectItems() {
         return selectItems;
-    }
-
-    public void setSelectItems(List<Integer> selectItems) {
-        this.selectItems = selectItems;
     }
 
     public boolean isClickLong() {
@@ -68,10 +65,10 @@ public abstract class MyAdapter<T> extends RecyclerView.Adapter<MyViewHolder> {
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        convert(holder,viewType,Mdatas.get(position), isClickLong());
+        convert(holder,viewType,Mdatas.get(position), isClickLong(),position);
     }
 
-    public abstract void convert(MyViewHolder holder,int viewType, T t, boolean isClickLong);
+    public abstract void convert(MyViewHolder holder,int viewType, T t, boolean isClickLong,int positoin);
 
     @Override
     public int getItemCount() {
@@ -91,13 +88,18 @@ public abstract class MyAdapter<T> extends RecyclerView.Adapter<MyViewHolder> {
         return getSelectItems().contains(position);
     }
 
-    public void switchSelectState(Integer position){
-        if(getSelectItems().contains(position)){
-            selectItems.remove(position);
-        }else {
+    public void addCheck(Integer position){
+        if(!getSelectItems().contains(position)){
             selectItems.add(position);
         }
-        notifyItemChanged(position);
+        //notifyItemChanged(position);
+    }
+
+    public void removeCheck(Integer position){
+        if(getSelectItems().contains(position)){
+            selectItems.remove(position);
+        }
+        //notifyItemChanged(position);
     }
 
     public int getSelectItemCount(){
