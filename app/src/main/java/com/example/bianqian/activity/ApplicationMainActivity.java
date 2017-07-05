@@ -5,6 +5,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.KeyEvent;
@@ -19,6 +21,7 @@ import com.example.bianqian.R;
 import com.example.bianqian.activity.userabout.LoginActivity;
 import com.example.bianqian.activity.userabout.UserMessageActivity;
 import com.example.bianqian.db.User;
+import com.example.bianqian.fragment.MoodNote;
 
 import cn.bmob.v3.BmobUser;
 
@@ -52,6 +55,14 @@ public class ApplicationMainActivity extends BasicActivity {
 
     @Override
     public void initViews() {
+
+        final MoodNote fragment = new MoodNote();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.fragment,fragment);
+        transaction.commit();
+
+
         //获取drawerlayout
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         //获取navigationView
@@ -64,6 +75,7 @@ public class ApplicationMainActivity extends BasicActivity {
         userIndividuality = (TextView) headView.findViewById(R.id.main_user_individuality);
         //获取menubutton，用于打开drawerlayout
         menuButton = (Button) findViewById(R.id.drawer_menu);
+
     }
 
     @Override
@@ -136,6 +148,7 @@ public class ApplicationMainActivity extends BasicActivity {
     @Override
     public void initData() {
         navigationView.setItemIconTintList(null);
+
     }
     //每次进入该页面都要初始的一些个人信息
     @Override

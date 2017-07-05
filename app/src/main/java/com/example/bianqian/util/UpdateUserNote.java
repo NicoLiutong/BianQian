@@ -33,13 +33,14 @@ public class UpdateUserNote {
     private static void showToast(String s,Context context){
         Toast.makeText(context,s,Toast.LENGTH_SHORT).show();
     }
-    public static void creatNewNote(UserNote userNote, final Context context){
-        final boolean[] state = new boolean[1];
+    public static void creatNewNote(UserNote userNote, final Context context,final GetFindData<UserNote> creatResult){
         userNote.save(new SaveListener<String>() {
             @Override
             public void done(String s, BmobException e) {
                 if(e == null){
                     showToast("保存成功",context);
+
+                    creatResult.creatDataResult();
                 }else {
                     showToast(ShowError.showError(e),context);
                     Log.d("error",ShowError.showError(e));
@@ -48,12 +49,14 @@ public class UpdateUserNote {
         });
     }
 
-    public static void updateNote(UserNote userNote, String noteId, final Context context){
+    public static void updateNote(UserNote userNote, String noteId, final Context context,final GetFindData<UserNote> updateResult){
         userNote.update(noteId, new UpdateListener() {
             @Override
             public void done(BmobException e) {
                 if(e == null){
-                    showToast("更新成功",context);
+                    showToast("保存成功",context);
+
+                    updateResult.upDataResult();
                 }else {
                     showToast(ShowError.showError(e),context);
                     Log.d("error",ShowError.showError(e));
@@ -62,7 +65,7 @@ public class UpdateUserNote {
         });
     }
 
-    public static void deletNote(List<String> noteIds, final Context context, final GetFindData<UserNote> deletResout){
+    public static void deletNote(List<String> noteIds, final Context context, final GetFindData<UserNote> deletResult){
         List<BmobObject> notes = new ArrayList<BmobObject>();
         for (String id : noteIds){
             UserNote note = new UserNote();
@@ -77,7 +80,7 @@ public class UpdateUserNote {
                         BatchResult result = list.get(i);
                         BmobException ex =result.getError();
                         if(ex==null){
-                            deletResout.deletDataResout(true);
+                            deletResult.deletDataResult(true);
                         }else{
                             showToast("第"+i+"个数据批量删除失败：" + "失败原因：" + ShowError.showError(ex),context);
                         }

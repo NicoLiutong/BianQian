@@ -13,11 +13,10 @@
         android:orientation="vertical"
         android:background="@color/white">
         <include layout="@layout/main_activity_toolbar"/>
-        <fragment
+        <FrameLayout
             android:id="@+id/fragment"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:name="com.example.bianqian.fragment.MoodNote"
             android:layout_weight="1"
             />
     </LinearLayout>

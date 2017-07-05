@@ -80,4 +80,10 @@
     <style name="MyDialog" parent="android:Theme.Holo.Light.Dialog">
         <item name="android:windowNoTitle">true</item>
     </style>
+
+    <style name="EditingTextMoodButton">
+        <item name="android:layout_width">30dp</item>
+        <item name="android:layout_height">30dp</item>
+        <item name="android:layout_margin">10dp</item>
+    </style>
 </resources>

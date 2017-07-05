@@ -8,5 +8,7 @@ import java.util.List;
 
 public interface GetFindData<T> {
     void returnFindData(List<T> findData);
-    void deletDataResout(Boolean bool);
+    void deletDataResult(Boolean bool);
+    void creatDataResult();
+    void upDataResult();
 }

@@ -1,19 +1,23 @@
 package com.example.bianqian.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.example.bianqian.R;
+import com.example.bianqian.activity.EditingTextActivity;
 import com.example.bianqian.adapter.MultiItemTypeSupport;
 import com.example.bianqian.adapter.MyAdapter;
 import com.example.bianqian.adapter.MyViewHolder;
@@ -37,14 +41,31 @@ public class MoodNote extends Fragment {
     public static final int NOTEITEM = 2;
     public static final int NOLAYOUT = 3;
 
+    private static final String ALL = "all";
+    private static final String RED = "red";
+    private static final String BLUE = "blue";
+    private static final String YELLOW = "yellow";
+    private static final String GREEN = "green";
+    private static final String PURPLE = "purple";
+    private static final String PINK = "pink";
+    private static final String GRAY = "gray";
+
+    private String mood = ALL;
+
     private User user;
     private RecyclerView mainRecyclerView;
 
     private Button cancleButton,deletButton;
 
+    private FloatingActionButton addNewNoteButton;
+
     private LinearLayout cancleDeletLayout;
 
+    private SwipeRefreshLayout swipeRefreshNote;
+
     private List<UserNote> data = new ArrayList<>();
+
+    private List<UserNote> allData;
 
     private MyAdapter<UserNote> adapter;
 
@@ -62,6 +83,16 @@ public class MoodNote extends Fragment {
         user = BmobUser.getCurrentUser(User.class);
         mainRecyclerView = (RecyclerView) view.findViewById(R.id.main_recyclerview);
         cancleDeletLayout = (LinearLayout) view.findViewById(R.id.cancle_delet_layout);
+        addNewNoteButton = (FloatingActionButton) view.findViewById(R.id.floating_newitem_button);
+        swipeRefreshNote = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_note);
+        swipeRefreshNote.setColorSchemeResources(R.color.text_background_purple,R.color.colorAccent,R.color.text_background_pink,R.color.text_background_red);
+        swipeRefreshNote.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                intialize();
+            }
+        });
+
         cancleDeletLayout.setVisibility(View.GONE);
         cancleButton = (Button) view.findViewById(R.id.cancle_button);
         deletButton = (Button) view.findViewById(R.id.delet_button);
@@ -78,16 +109,18 @@ public class MoodNote extends Fragment {
                 }
             }
 
+
             @Override
             public int getItemViewType(int position, UserNote userNote) {
                 if(data.size() != 0){
-                    /*if(upDateAt == null){
-                    upDateAt = userNote.getUpdatedAt().split("-");
-                    }*/
+                    Log.d("3333",upDateAt[0] + "-" + upDateAt[1] + "-" + upDateAt[2]);
                     if(userNote.getUpdatedAt().split("-")[0].equals(upDateAt[0]) && userNote.getUpdatedAt().split("-")[1].equals(upDateAt[1])){
                         return NOTEITEM;
                     }else {
-                        upDateAt = userNote.getUpdatedAt().split("-");
+                        upDateAt[0] = userNote.getUpdatedAt().split("-")[0];
+                        upDateAt[1] = userNote.getUpdatedAt().split("-")[1];
+                        upDateAt[2] = userNote.getUpdatedAt().split("-")[2];
+                        Log.d("444",upDateAt[0] + "-" + upDateAt[1] + "-" + upDateAt[2]);
                         return TITLE;
                     }
                 }else {
@@ -98,19 +131,22 @@ public class MoodNote extends Fragment {
         changeData = new GetFindData<UserNote>() {
             @Override
             public void returnFindData(List<UserNote> findData) {
-                data.clear();
-                //data = findData;
-                for(UserNote i:findData){
-                    data.add(i);
-                    //Log.d("22",i.getObjectId());
-                }
-                notifyDataSetChanged();
+                allData = findData;
+                Log.d("1","3");
+                notifyDataSetChanged(mood,allData);
             }
 
             @Override
-            public void deletDataResout(Boolean bool) {
-                UpdateUserNote.getAuthorNote(user,getContext(),changeData);
+            public void deletDataResult(Boolean bool) {
+                //删除完数据后，获取删除成功的项目并更新
+                intialize();
             }
+
+            @Override
+            public void creatDataResult() {     }
+
+            @Override
+            public void upDataResult() {        }
         };
 
         intialize();
@@ -135,13 +171,28 @@ public class MoodNote extends Fragment {
         mainRecyclerView.setLayoutManager(layoutManager);
         mainRecyclerView.setAdapter(adapter);
 
+        addNewNoteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), EditingTextActivity.class);
+                intent.putExtra(EditingTextActivity.TYPE,EditingTextActivity.CREATNOTE);
+                intent.putExtra(EditingTextActivity.NOTEID,"");
+                intent.putExtra(EditingTextActivity.MOOD,"red");
+                intent.putExtra(EditingTextActivity.DATE,"");
+                intent.putExtra(EditingTextActivity.TEXT,"");
+                getContext().startActivity(intent);
+            }
+        });
+
+
         cancleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 adapter.clearSelectItems();
                 adapter.setClickLong(false);
-                notifyDataSetChanged();
+                notifyDataSetChanged(mood,allData);
                 cancleDeletLayout.setVisibility(View.GONE);
+                addNewNoteButton.setVisibility(View.VISIBLE);
             }
         });
 
@@ -158,17 +209,25 @@ public class MoodNote extends Fragment {
                 adapter.clearSelectItems();
                 adapter.setClickLong(false);
                 cancleDeletLayout.setVisibility(View.GONE);
+                addNewNoteButton.setVisibility(View.VISIBLE);
             }
         });
         return view;
     }
 
-    private List<UserNote> intialize(){
-        UpdateUserNote.getAuthorNote(user,getContext(),changeData);
-        return data;
+   @Override
+    public void onResume() {
+       Log.d("1","1");
+       intialize();
+        super.onResume();
     }
 
-    public void intializeRecycler(final MyViewHolder holder, UserNote userNote,final boolean isClickLong,int positoin){
+    private void intialize(){
+        Log.d("1","2");
+        UpdateUserNote.getAuthorNote(user,getContext(),changeData);
+    }
+
+    public void intializeRecycler(final MyViewHolder holder, final UserNote userNote, final boolean isClickLong, int positoin){
         int circleColor,backgroundColor,textColor;
         switch(userNote.getMoodColor()){
             case  "red" : circleColor = R.drawable.red_circle;
@@ -236,7 +295,13 @@ public class MoodNote extends Fragment {
                 public void onClick(View v){
                     if(!isClickLong){
                     //傳入數據，進入編輯頁面
-                    Toast.makeText(getContext(),"点击",Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(getContext(), EditingTextActivity.class);
+                        intent.putExtra(EditingTextActivity.TYPE,EditingTextActivity.CHANGENOTE);
+                        intent.putExtra(EditingTextActivity.NOTEID,userNote.getObjectId());
+                        intent.putExtra(EditingTextActivity.MOOD,userNote.getMoodColor());
+                        intent.putExtra(EditingTextActivity.DATE,userNote.getUpdatedAt());
+                        intent.putExtra(EditingTextActivity.TEXT,userNote.getNote());
+                        getContext().startActivity(intent);
                     }
                 }
             });
@@ -245,7 +310,8 @@ public class MoodNote extends Fragment {
                 public boolean onLongClick(View v) {
                     adapter.setClickLong(true);
                     cancleDeletLayout.setVisibility(View.VISIBLE);
-                    notifyDataSetChanged();
+                    addNewNoteButton.setVisibility(View.GONE);
+                    notifyDataSetChanged(mood,allData);
                     return true;
                 }
             });
@@ -264,8 +330,83 @@ public class MoodNote extends Fragment {
 
     }
 
-    private void notifyDataSetChanged(){
-        upDateAt = new String[]{"2050","12","12 24:59:59"};
+    private void notifyDataSetChanged(String mood,List<UserNote> alldata){
+        Log.d("1","4");
+
+        upDateAt[0] = "2050";
+        upDateAt[1] = "12";
+        upDateAt[2] = "12 24:59:59";
+        Log.d("2222",upDateAt[0] + "-" + upDateAt[1] + "-" + upDateAt[2]);
+        data.clear();
+        for(UserNote i:getListWithMood(mood,alldata)){
+            data.add(i);
+        }
         adapter.notifyDataSetChanged();
+        swipeRefreshNote.setRefreshing(false);
+        upDateAt[0] = "2050";
+        upDateAt[1] = "12";
+        upDateAt[2] = "12 24:59:59";
+    }
+
+    private List<UserNote> getListWithMood(String mood,List<UserNote> alldata){
+        List<UserNote> userNotes = new ArrayList<>();
+        switch (mood){
+            case RED: for (UserNote i:alldata){
+                if(i.getMoodColor().equals("red")){
+                    userNotes.add(i);
+                }
+            }
+                return userNotes;
+
+            case GREEN : for (UserNote i:alldata){
+                if(i.getMoodColor().equals("green")){
+                    userNotes.add(i);
+                }
+            }
+                return userNotes;
+
+            case BLUE : for (UserNote i:alldata){
+                if(i.getMoodColor().equals("blue")){
+                    userNotes.add(i);
+                }
+            }
+                return userNotes;
+
+            case YELLOW : for (UserNote i:alldata){
+                if(i.getMoodColor().equals("yellow")){
+                    userNotes.add(i);
+                }
+            }
+                return userNotes;
+
+            case PURPLE :  for (UserNote i:alldata){
+                if(i.getMoodColor().equals("purple")){
+                    userNotes.add(i);
+                }
+            }
+                return userNotes;
+
+            case PINK : for (UserNote i:alldata){
+                if(i.getMoodColor().equals("pink")){
+                    userNotes.add(i);
+                }
+            }
+                return userNotes;
+
+            case GRAY : for (UserNote i:alldata){
+                if(i.getMoodColor().equals("gray")){
+                    userNotes.add(i);
+                }
+            }
+                return userNotes;
+
+            default:
+                return alldata;
+        }
+    }
+
+    public void updateWithMood(String mood){
+        this.mood = mood;
+        notifyDataSetChanged(this.mood,allData);
     }
 }
