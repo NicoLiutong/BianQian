@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +17,7 @@ import android.widget.LinearLayout;
 
 import com.example.bianqian.R;
 import com.example.bianqian.activity.EditingTextActivity;
+import com.example.bianqian.adapter.AdapterDateList;
 import com.example.bianqian.adapter.MultiItemTypeSupport;
 import com.example.bianqian.adapter.MyAdapter;
 import com.example.bianqian.adapter.MyViewHolder;
@@ -63,18 +63,15 @@ public class MoodNote extends Fragment {
 
     private SwipeRefreshLayout swipeRefreshNote;
 
-    private List<UserNote> data = new ArrayList<>();
+    private List<AdapterDateList> data = new ArrayList<>();
 
     private List<UserNote> allData;
 
-    private MyAdapter<UserNote> adapter;
+    private MyAdapter<AdapterDateList> adapter;
 
-    private MultiItemTypeSupport<UserNote> multiItemTypeSupport;
+    private MultiItemTypeSupport<AdapterDateList> multiItemTypeSupport;
 
     private GetFindData<UserNote> changeData;
-
-    private String[] upDateAt = {"2050","12","12 24:59:59"};
-
 
     @Nullable
     @Override
@@ -99,7 +96,8 @@ public class MoodNote extends Fragment {
 
         final LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        multiItemTypeSupport = new MultiItemTypeSupport<UserNote>() {
+
+        multiItemTypeSupport = new MultiItemTypeSupport<AdapterDateList>() {
             @Override
             public int getLayoutId(int itenType) {
                 switch (itenType){
@@ -111,17 +109,12 @@ public class MoodNote extends Fragment {
 
 
             @Override
-            public int getItemViewType(int position, UserNote userNote) {
+            public int getItemViewType(int position, AdapterDateList dataList) {
                 if(data.size() != 0){
-                    Log.d("3333",upDateAt[0] + "-" + upDateAt[1] + "-" + upDateAt[2]);
-                    if(userNote.getUpdatedAt().split("-")[0].equals(upDateAt[0]) && userNote.getUpdatedAt().split("-")[1].equals(upDateAt[1])){
-                        return NOTEITEM;
-                    }else {
-                        upDateAt[0] = userNote.getUpdatedAt().split("-")[0];
-                        upDateAt[1] = userNote.getUpdatedAt().split("-")[1];
-                        upDateAt[2] = userNote.getUpdatedAt().split("-")[2];
-                        Log.d("444",upDateAt[0] + "-" + upDateAt[1] + "-" + upDateAt[2]);
+                    if(dataList.isDataTile()){
                         return TITLE;
+                    }else {
+                        return NOTEITEM;
                     }
                 }else {
                     return NOLAYOUT;
@@ -132,7 +125,7 @@ public class MoodNote extends Fragment {
             @Override
             public void returnFindData(List<UserNote> findData) {
                 allData = findData;
-                Log.d("1","3");
+                //Log.d("1","3");
                 notifyDataSetChanged(mood,allData);
             }
 
@@ -149,25 +142,25 @@ public class MoodNote extends Fragment {
             public void upDataResult() {        }
         };
 
-        intialize();
-        adapter = new MyAdapter<UserNote>(getContext(),data,multiItemTypeSupport) {
+        //intialize();
+        adapter = new MyAdapter<AdapterDateList>(getContext(),data,multiItemTypeSupport) {
             @Override
-            public void convert(final MyViewHolder holder, int viewType, UserNote userNote, boolean isClickLong, int positoin) {
+            public void convert(final MyViewHolder holder, int viewType, AdapterDateList adapterDate, boolean isClickLong, int positoin) {
                 switch (viewType){
                     case TITLE :
-                        holder.setText(R.id.item_date_title,userNote.getUpdatedAt().split("-")[0] + "年" + userNote.getUpdatedAt().split("-")[1] + "月");
+                        holder.setText(R.id.item_date_title,adapterDate.getDate().split("-")[0] + "年" + adapterDate.getDate().split("-")[1] + "月");
                         holder.setInvisiblity(R.id.note_top_line);
-                        intializeRecycler(holder,userNote,isClickLong,positoin);
+                        intializeRecycler(holder,adapterDate,isClickLong,positoin);
                         break;
                     case NOTEITEM :
-                        intializeRecycler(holder,userNote,isClickLong,positoin);
+                        intializeRecycler(holder,adapterDate,isClickLong,positoin);
                         break;
                     default:
                         break;
                 }
             }
         };
-
+        //Log.d("1","start");
         mainRecyclerView.setLayoutManager(layoutManager);
         mainRecyclerView.setAdapter(adapter);
 
@@ -202,7 +195,7 @@ public class MoodNote extends Fragment {
                 List<String> noteIds = new ArrayList<String>();
                 List<Integer> position = adapter.getSelectItems();
                 for(int i : position){
-                    noteIds.add(data.get(i).getObjectId());
+                    noteIds.add(data.get(i).getUserNote().getObjectId());
                 }
 
                 UpdateUserNote.deletNote(noteIds,getContext(),changeData);
@@ -217,19 +210,19 @@ public class MoodNote extends Fragment {
 
    @Override
     public void onResume() {
-       Log.d("1","1");
+       //Log.d("1","1");
        intialize();
         super.onResume();
     }
 
     private void intialize(){
-        Log.d("1","2");
+        //Log.d("1","2");
         UpdateUserNote.getAuthorNote(user,getContext(),changeData);
     }
 
-    public void intializeRecycler(final MyViewHolder holder, final UserNote userNote, final boolean isClickLong, int positoin){
+    public void intializeRecycler(final MyViewHolder holder, final AdapterDateList adapterDate, final boolean isClickLong, int positoin){
         int circleColor,backgroundColor,textColor;
-        switch(userNote.getMoodColor()){
+        switch(adapterDate.getUserNote().getMoodColor()){
             case  "red" : circleColor = R.drawable.red_circle;
                 backgroundColor = R.color.text_background_red;
                 textColor = R.color.text_red;
@@ -270,17 +263,11 @@ public class MoodNote extends Fragment {
                 break;
         }
 
-        /*if(data.get(positoin + 1) != -1){
-            if(!data.get(positoin + 1).getUpdatedAt().split("-")[1].equals(upDateAt[1])){
-                holder.setInvisiblity(R.id.note_bottom_line);
-            }
-        }*/
-
         holder.setCircleColor(R.id.note_circle,circleColor);
         holder.setBackGround(R.id.note_card_color,backgroundColor);
         holder.setTextColor(R.id.note_text,textColor);
-        holder.setText(R.id.note_text,userNote.getNote());
-        holder.setText(R.id.note_item_date,userNote.getUpdatedAt());
+        holder.setText(R.id.note_text,adapterDate.getUserNote().getNote());
+        holder.setText(R.id.note_item_date,adapterDate.getUserNote().getUpdatedAt());
 
         if(isClickLong){
             holder.setVisiblity(R.id.note_checkbox);
@@ -297,10 +284,10 @@ public class MoodNote extends Fragment {
                     //傳入數據，進入編輯頁面
                         Intent intent = new Intent(getContext(), EditingTextActivity.class);
                         intent.putExtra(EditingTextActivity.TYPE,EditingTextActivity.CHANGENOTE);
-                        intent.putExtra(EditingTextActivity.NOTEID,userNote.getObjectId());
-                        intent.putExtra(EditingTextActivity.MOOD,userNote.getMoodColor());
-                        intent.putExtra(EditingTextActivity.DATE,userNote.getUpdatedAt());
-                        intent.putExtra(EditingTextActivity.TEXT,userNote.getNote());
+                        intent.putExtra(EditingTextActivity.NOTEID,adapterDate.getUserNote().getObjectId());
+                        intent.putExtra(EditingTextActivity.MOOD,adapterDate.getUserNote().getMoodColor());
+                        intent.putExtra(EditingTextActivity.DATE,adapterDate.getUserNote().getUpdatedAt());
+                        intent.putExtra(EditingTextActivity.TEXT,adapterDate.getUserNote().getNote());
                         getContext().startActivity(intent);
                     }
                 }
@@ -331,82 +318,110 @@ public class MoodNote extends Fragment {
     }
 
     private void notifyDataSetChanged(String mood,List<UserNote> alldata){
-        Log.d("1","4");
-
-        upDateAt[0] = "2050";
-        upDateAt[1] = "12";
-        upDateAt[2] = "12 24:59:59";
-        Log.d("2222",upDateAt[0] + "-" + upDateAt[1] + "-" + upDateAt[2]);
+        //Log.d("1","4");
         data.clear();
-        for(UserNote i:getListWithMood(mood,alldata)){
-            data.add(i);
+        String date = "2050-12-12 24:59:59";
+        for(AdapterDateList i:getListWithMood(mood,alldata)){
+            if(i.getUserNote().getUpdatedAt().split("-")[0].equals(date.split("-")[0])&&i.getUserNote().getUpdatedAt().split("-")[1].equals(date.split("-")[1])){
+               i.setDataTile(false);
+                i.setDate(i.getUserNote().getUpdatedAt());
+                data.add(i);
+            }else {
+                date = i.getUserNote().getUpdatedAt();
+                i.setDataTile(true);
+                i.setDate(i.getUserNote().getUpdatedAt());
+                data.add(i);
+            }
         }
         adapter.notifyDataSetChanged();
         swipeRefreshNote.setRefreshing(false);
-        upDateAt[0] = "2050";
-        upDateAt[1] = "12";
-        upDateAt[2] = "12 24:59:59";
     }
 
-    private List<UserNote> getListWithMood(String mood,List<UserNote> alldata){
-        List<UserNote> userNotes = new ArrayList<>();
+    private List<AdapterDateList> getListWithMood(String mood,List<UserNote> alldata){
+        List<AdapterDateList> adapterDateLists = new ArrayList<>();
         switch (mood){
             case RED: for (UserNote i:alldata){
                 if(i.getMoodColor().equals("red")){
-                    userNotes.add(i);
+                    AdapterDateList adapterDateList = new AdapterDateList();
+                    adapterDateList.setUserNote(i);
+                    adapterDateLists.add(adapterDateList);
                 }
             }
-                return userNotes;
+                return adapterDateLists;
 
             case GREEN : for (UserNote i:alldata){
                 if(i.getMoodColor().equals("green")){
-                    userNotes.add(i);
+                    AdapterDateList adapterDateList = new AdapterDateList();
+                    adapterDateList.setUserNote(i);
+                    adapterDateLists.add(adapterDateList);
                 }
             }
-                return userNotes;
+                return adapterDateLists;
 
             case BLUE : for (UserNote i:alldata){
                 if(i.getMoodColor().equals("blue")){
-                    userNotes.add(i);
+                    AdapterDateList adapterDateList = new AdapterDateList();
+                    adapterDateList.setUserNote(i);
+                    adapterDateLists.add(adapterDateList);
                 }
             }
-                return userNotes;
+                return adapterDateLists;
 
             case YELLOW : for (UserNote i:alldata){
                 if(i.getMoodColor().equals("yellow")){
-                    userNotes.add(i);
+                    AdapterDateList adapterDateList = new AdapterDateList();
+                    adapterDateList.setUserNote(i);
+                    adapterDateLists.add(adapterDateList);
                 }
             }
-                return userNotes;
+                return adapterDateLists;
 
             case PURPLE :  for (UserNote i:alldata){
                 if(i.getMoodColor().equals("purple")){
-                    userNotes.add(i);
+                    AdapterDateList adapterDateList = new AdapterDateList();
+                    adapterDateList.setUserNote(i);
+                    adapterDateLists.add(adapterDateList);
                 }
             }
-                return userNotes;
+                return adapterDateLists;
 
             case PINK : for (UserNote i:alldata){
                 if(i.getMoodColor().equals("pink")){
-                    userNotes.add(i);
+                    AdapterDateList adapterDateList = new AdapterDateList();
+                    adapterDateList.setUserNote(i);
+                    adapterDateLists.add(adapterDateList);
                 }
             }
-                return userNotes;
+                return adapterDateLists;
 
             case GRAY : for (UserNote i:alldata){
                 if(i.getMoodColor().equals("gray")){
-                    userNotes.add(i);
+                    AdapterDateList adapterDateList = new AdapterDateList();
+                    adapterDateList.setUserNote(i);
+                    adapterDateLists.add(adapterDateList);
                 }
             }
-                return userNotes;
+                return adapterDateLists;
 
             default:
-                return alldata;
+                for(UserNote i:alldata){
+                    AdapterDateList adapterDateList = new AdapterDateList();
+                    adapterDateList.setUserNote(i);
+                    adapterDateLists.add(adapterDateList);
+                }
+                return adapterDateLists;
         }
     }
 
     public void updateWithMood(String mood){
         this.mood = mood;
         notifyDataSetChanged(this.mood,allData);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        data.clear();
+        adapter.notifyDataSetChanged();
     }
 }

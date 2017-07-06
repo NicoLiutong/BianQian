@@ -2,6 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:id="@+id/ground1"
         android:checkableBehavior="single">
+        <item android:id="@+id/menu_all"
+              android:icon="@drawable/all_color_circle"
+              android:title="@string/all_mood"/>
         <item android:id="@+id/menu_red"
               android:icon="@drawable/red_circle"
               android:title="@string/red_mood"/>
@@ -23,9 +26,6 @@
         <item android:id="@+id/menu_gray"
               android:icon="@drawable/gray_circle"
               android:title="@string/gray_mood"/>
-        <item android:id="@+id/menu_all"
-              android:icon="@drawable/all_color_circle"
-              android:title="@string/all_mood"/>
     </group>
 
     <group android:id="@+id/ground2"

@@ -47,6 +47,8 @@ public class ApplicationMainActivity extends BasicActivity {
 
     private boolean isLogin = true;
 
+    private MoodNote fragment;
+
     private static final int EXIT_APPLICATION = 1;
     @Override
     public void setContentView() {
@@ -56,7 +58,7 @@ public class ApplicationMainActivity extends BasicActivity {
     @Override
     public void initViews() {
 
-        final MoodNote fragment = new MoodNote();
+        fragment = new MoodNote();
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.fragment,fragment);
@@ -109,28 +111,44 @@ public class ApplicationMainActivity extends BasicActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.menu_red:
-                        ShowToast("姨妈红");
+                        fragment.updateWithMood("red");
+                        drawerLayout.closeDrawers();
+                        //ShowToast("姨妈红");
                         break;
                     case R.id.menu_pink:
-                        ShowToast("少女粉");
+                        fragment.updateWithMood("pink");
+                        drawerLayout.closeDrawers();
+                        //ShowToast("少女粉");
                         break;
                     case R.id.menu_yellow:
-                        ShowToast("咸蛋黄");
+                        fragment.updateWithMood("yellow");
+                        drawerLayout.closeDrawers();
+                        //ShowToast("咸蛋黄");
                         break;
                     case R.id.menu_green:
-                        ShowToast("早苗绿");
+                        fragment.updateWithMood("green");
+                        drawerLayout.closeDrawers();
+                        //ShowToast("早苗绿");
                         break;
                     case R.id.menu_blue:
-                        ShowToast("胖次蓝");
+                        fragment.updateWithMood("blue");
+                        drawerLayout.closeDrawers();
+                        //ShowToast("胖次蓝");
                         break;
                     case R.id.menu_purple:
-                        ShowToast("基佬紫");
+                        fragment.updateWithMood("purple");
+                        drawerLayout.closeDrawers();
+                        //ShowToast("基佬紫");
                         break;
                     case R.id.menu_gray:
-                        ShowToast("暗夜灰");
+                        fragment.updateWithMood("gray");
+                        drawerLayout.closeDrawers();
+                        //ShowToast("暗夜灰");
                         break;
                     case R.id.menu_all:
-                        ShowToast("缤纷彩");
+                        fragment.updateWithMood("all");
+                        drawerLayout.closeDrawers();
+                        //ShowToast("缤纷彩");
                         break;
 
                     case R.id.menu_setting:
