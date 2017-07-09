@@ -24,6 +24,10 @@ import com.example.bianqian.db.User;
 import com.example.bianqian.fragment.MoodNote;
 
 import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.listener.BmobUpdateListener;
+import cn.bmob.v3.update.BmobUpdateAgent;
+import cn.bmob.v3.update.UpdateResponse;
+import cn.bmob.v3.update.UpdateStatus;
 
 public class ApplicationMainActivity extends BasicActivity {
 
@@ -155,7 +159,19 @@ public class ApplicationMainActivity extends BasicActivity {
                         ShowToast("设置");
                         break;
                     case R.id.menu_update_application:
-                        ShowToast("更新");
+                        //设置版本更新监听
+                        BmobUpdateAgent.setUpdateListener(new BmobUpdateListener() {
+                            @Override
+                            public void onUpdateReturned(int i, UpdateResponse updateResponse) {
+                                if(i == UpdateStatus.Yes){
+
+                                }else if(i == UpdateStatus.No){
+                                    ShowToast("没有新版本");
+                                }
+                            }
+                        });
+                        BmobUpdateAgent.forceUpdate(ApplicationMainActivity.this);
+                        //ShowToast("更新");
                         break;
                 }
                 return true;
@@ -165,6 +181,12 @@ public class ApplicationMainActivity extends BasicActivity {
 
     @Override
     public void initData() {
+        //BmobUpdateAgent.initAppVersion();
+
+        // 更新软件版本
+        BmobUpdateAgent.setUpdateOnlyWifi(false);
+        BmobUpdateAgent.update(this);
+
         navigationView.setItemIconTintList(null);
 
     }

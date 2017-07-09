@@ -35,6 +35,7 @@ public class EditingTextActivity extends BasicActivity implements View.OnClickLi
     public static final String TYPE = "type";
     public static final String NOTEID = "noteId";
 
+    private boolean isComplete;
     private Button completeButton, redButton, purpleButton, pinkButton, yellowButton, greenButton, blueButton, grayButton;
 
     private ImageView backButton;
@@ -97,20 +98,22 @@ public class EditingTextActivity extends BasicActivity implements View.OnClickLi
         moodColor = intent.getStringExtra(MOOD);
         noteId = intent.getStringExtra(NOTEID);
 
+        isComplete = false;
+
         getResult = new GetFindData<UserNote>() {
             @Override
-            public void returnFindData(List<UserNote> findData) {    }
+            public void returnFindData(List<UserNote> findData,Boolean isSuccess) {    }
 
             @Override
-            public void deletDataResult(Boolean bool) {     }
+            public void deletDataResult(Boolean isSuccess) {     }
 
             @Override
-            public void creatDataResult() {
+            public void creatDataResult(Boolean isSuccess) {
                 finish();
             }
 
             @Override
-            public void upDataResult() {
+            public void upDataResult(Boolean isSuccess) {
                 finish();
             }
         };
@@ -126,46 +129,57 @@ public class EditingTextActivity extends BasicActivity implements View.OnClickLi
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.editing_backbutton : finish();
+        switch (v.getId()) {
+            case R.id.editing_backbutton:
+                finish();
                 break;
-            case R.id.editing_red_button : moodColor = "red";
+            case R.id.editing_red_button:
+                moodColor = "red";
                 intilizeColor(moodColor);
                 break;
-            case R.id.editing_purple_button : moodColor = "purple";
+            case R.id.editing_purple_button:
+                moodColor = "purple";
                 intilizeColor(moodColor);
                 break;
-            case R.id.editing_pink_button : moodColor = "pink";
+            case R.id.editing_pink_button:
+                moodColor = "pink";
                 intilizeColor(moodColor);
                 break;
-            case R.id.editing_yellow_button : moodColor = "yellow";
+            case R.id.editing_yellow_button:
+                moodColor = "yellow";
                 intilizeColor(moodColor);
                 break;
-            case R.id.editing_green_button : moodColor = "green";
+            case R.id.editing_green_button:
+                moodColor = "green";
                 intilizeColor(moodColor);
                 break;
-            case R.id.editing_blue_button : moodColor = "blue";
+            case R.id.editing_blue_button:
+                moodColor = "blue";
                 intilizeColor(moodColor);
                 break;
-            case R.id.editing_gray_button : moodColor = "gray";
+            case R.id.editing_gray_button:
+                moodColor = "gray";
                 intilizeColor(moodColor);
                 break;
-            case R.id.editing_complete :
-                UserNote userNote = new UserNote();
-                userNote.setUser(user);
-                userNote.setMoodColor(moodColor);
-                userNote.setNote(editText.getText().toString());
+            case R.id.editing_complete:
+                if (!isComplete) {
+                    isComplete = true;
+                    UserNote userNote = new UserNote();
+                    userNote.setUser(user);
+                    userNote.setMoodColor(moodColor);
+                    userNote.setNote(editText.getText().toString());
 
-                if(editType.equals(CREATNOTE)){
-                    //存储新建的
-                    UpdateUserNote.creatNewNote(userNote,this,getResult);
-                }
+                    if (editType.equals(CREATNOTE)) {
+                        //存储新建的
+                        UpdateUserNote.creatNewNote(userNote, this, getResult);
+                    }
 
-                if(editType.equals(CHANGENOTE)) {
-                    //更新后台数据
-                    UpdateUserNote.updateNote(userNote,noteId,this,getResult);
+                    if (editType.equals(CHANGENOTE)) {
+                        //更新后台数据
+                        UpdateUserNote.updateNote(userNote, noteId, this, getResult);
+                    }
+                    break;
                 }
-            break;
         }
     }
 

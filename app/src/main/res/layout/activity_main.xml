@@ -17,6 +17,6 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="30dp"
-        android:text="Copyright @ 2016-2017 喵记"
+        android:text="Copyright © 2016-2017 喵记"
         android:textColor="@color/gray"/>
 </RelativeLayout>

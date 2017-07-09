@@ -123,23 +123,27 @@ public class MoodNote extends Fragment {
             };
         changeData = new GetFindData<UserNote>() {
             @Override
-            public void returnFindData(List<UserNote> findData) {
+            public void returnFindData(List<UserNote> findData,Boolean isSuccess) {
+                if(isSuccess){
                 allData = findData;
                 //Log.d("1","3");
                 notifyDataSetChanged(mood,allData);
+                }else {
+                    swipeRefreshNote.setRefreshing(false);
+                }
             }
 
             @Override
-            public void deletDataResult(Boolean bool) {
+            public void deletDataResult(Boolean isSuccess) {
                 //删除完数据后，获取删除成功的项目并更新
                 intialize();
             }
 
             @Override
-            public void creatDataResult() {     }
+            public void creatDataResult(Boolean isSuccess) {     }
 
             @Override
-            public void upDataResult() {        }
+            public void upDataResult(Boolean isSuccess) {        }
         };
 
         //intialize();
@@ -211,6 +215,7 @@ public class MoodNote extends Fragment {
    @Override
     public void onResume() {
        //Log.d("1","1");
+       swipeRefreshNote.setRefreshing(true);
        intialize();
         super.onResume();
     }

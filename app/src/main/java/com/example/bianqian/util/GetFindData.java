@@ -7,8 +7,8 @@ import java.util.List;
  */
 
 public interface GetFindData<T> {
-    void returnFindData(List<T> findData);
-    void deletDataResult(Boolean bool);
-    void creatDataResult();
-    void upDataResult();
+    void returnFindData(List<T> findData,Boolean isSuccess);
+    void deletDataResult(Boolean isSuccess);
+    void creatDataResult(Boolean isSuccess);
+    void upDataResult(Boolean isSuccess);
 }

@@ -40,7 +40,7 @@ public class UpdateUserNote {
                 if(e == null){
                     showToast("保存成功",context);
 
-                    creatResult.creatDataResult();
+                    creatResult.creatDataResult(true);
                 }else {
                     showToast(ShowError.showError(e),context);
                     Log.d("error",ShowError.showError(e));
@@ -56,7 +56,7 @@ public class UpdateUserNote {
                 if(e == null){
                     showToast("保存成功",context);
 
-                    updateResult.upDataResult();
+                    updateResult.upDataResult(true);
                 }else {
                     showToast(ShowError.showError(e),context);
                     Log.d("error",ShowError.showError(e));
@@ -102,9 +102,10 @@ public class UpdateUserNote {
             @Override
             public void done(List<UserNote> list, BmobException e) {
               if(e == null){
-                  findData.returnFindData(list);
+                  findData.returnFindData(list,true);
               } else {
                   showToast(ShowError.showError(e),context);
+                  findData.returnFindData(list,false);
                   Log.d("error",ShowError.showError(e));
               }
             }
@@ -148,9 +149,10 @@ public class UpdateUserNote {
             @Override
             public void done(List<UserNote> list, BmobException e) {
                 if(e == null){
-                    findData.returnFindData(list);
+                    findData.returnFindData(list,true);
                 }else {
                     showToast(ShowError.showError(e),context);
+                    findData.returnFindData(list,false);
                     Log.d("error",ShowError.showError(e));
                 }
             }
