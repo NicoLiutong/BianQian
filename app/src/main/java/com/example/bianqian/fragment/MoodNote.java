@@ -21,9 +21,9 @@ import com.example.bianqian.adapter.AdapterDateList;
 import com.example.bianqian.adapter.MultiItemTypeSupport;
 import com.example.bianqian.adapter.MyAdapter;
 import com.example.bianqian.adapter.MyViewHolder;
-import com.example.bianqian.db.User;
-import com.example.bianqian.db.UserNote;
-import com.example.bianqian.util.GetFindData;
+import com.example.bianqian.bmobbasic.User;
+import com.example.bianqian.bmobbasic.UserNote;
+import com.example.bianqian.impl.GetFindData;
 import com.example.bianqian.util.UpdateUserNote;
 
 import java.util.ArrayList;

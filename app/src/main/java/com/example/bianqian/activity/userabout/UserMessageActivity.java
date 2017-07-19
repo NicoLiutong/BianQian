@@ -15,7 +15,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.bianqian.R;
 import com.example.bianqian.activity.BasicActivity;
-import com.example.bianqian.db.User;
+import com.example.bianqian.bmobbasic.User;
 import com.example.bianqian.util.AllSharedPreference;
 import com.example.bianqian.util.ShowError;
 import com.wx.wheelview.adapter.ArrayWheelAdapter;

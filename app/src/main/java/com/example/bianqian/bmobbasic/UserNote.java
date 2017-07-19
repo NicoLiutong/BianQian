@@ -1,4 +1,4 @@
-package com.example.bianqian.db;
+package com.example.bianqian.bmobbasic;
 
 import cn.bmob.v3.BmobObject;
 

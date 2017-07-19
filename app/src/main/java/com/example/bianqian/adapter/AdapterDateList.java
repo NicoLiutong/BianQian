@@ -1,6 +1,6 @@
 package com.example.bianqian.adapter;
 
-import com.example.bianqian.db.UserNote;
+import com.example.bianqian.bmobbasic.UserNote;
 
 /**
  * Created by 刘通 on 2017/7/6.

@@ -6,7 +6,7 @@ import android.os.Message;
 
 import com.example.bianqian.R;
 import com.example.bianqian.activity.userabout.LoginActivity;
-import com.example.bianqian.db.User;
+import com.example.bianqian.bmobbasic.User;
 import com.example.bianqian.util.AllSharedPreference;
 
 import cn.bmob.v3.BmobUser;

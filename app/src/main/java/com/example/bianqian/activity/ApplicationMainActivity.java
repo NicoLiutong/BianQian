@@ -21,7 +21,7 @@ import com.bumptech.glide.Glide;
 import com.example.bianqian.R;
 import com.example.bianqian.activity.userabout.LoginActivity;
 import com.example.bianqian.activity.userabout.UserMessageActivity;
-import com.example.bianqian.db.User;
+import com.example.bianqian.bmobbasic.User;
 import com.example.bianqian.fragment.MoodNote;
 import com.example.bianqian.util.LevelUtils;
 

@@ -18,7 +18,7 @@ import android.widget.TextView;
 
 import com.example.bianqian.R;
 import com.example.bianqian.activity.BasicActivity;
-import com.example.bianqian.db.User;
+import com.example.bianqian.bmobbasic.User;
 import com.example.bianqian.util.ShowError;
 import com.oginotihiro.cropview.CropUtil;
 import com.oginotihiro.cropview.CropView;
