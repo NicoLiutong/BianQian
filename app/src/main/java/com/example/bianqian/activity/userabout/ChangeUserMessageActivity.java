@@ -19,7 +19,6 @@ import android.widget.TextView;
 import com.example.bianqian.R;
 import com.example.bianqian.activity.BasicActivity;
 import com.example.bianqian.db.User;
-import com.example.bianqian.util.AllStatic;
 import com.example.bianqian.util.ShowError;
 import com.oginotihiro.cropview.CropUtil;
 import com.oginotihiro.cropview.CropView;
@@ -38,6 +37,18 @@ import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
 import static android.content.Intent.FLAG_GRANT_WRITE_URI_PERMISSION;
 
 public class ChangeUserMessageActivity extends BasicActivity implements EasyPermissions.PermissionCallbacks {
+
+    public static final String CHANGECAMERPICTURE = "changecamerpicture";
+
+    public static final String CHANGEPHOTOPICTURE = "changephotopicture";
+
+    public static final String CHANGETAG = "tag";
+
+    public static final String CHANGENAME = "changename";
+
+    public static final String CHANGEINDIVIDUALITY = "changeindividuality";
+
+    public static final String CHANGEPASSWORD = "changepassword";
 
     private Button backButton, completeButton;
 
@@ -100,8 +111,8 @@ public class ChangeUserMessageActivity extends BasicActivity implements EasyPerm
                 //设置progress
                 final ProgressDialog dialog = ProgressDialog.show(ChangeUserMessageActivity.this, null, "请等待…", true, false);
                 switch (type) {
-                    case AllStatic.CHANGECAMERPICTURE:
-                    case AllStatic.CHANGEPHOTOPICTURE:
+                    case CHANGECAMERPICTURE:
+                    case CHANGEPHOTOPICTURE:
                         //获取之前图像的url
                         deletFile.setUrl(bmobUser.getUesrImage().getUrl());
                         new Thread() {
@@ -117,7 +128,7 @@ public class ChangeUserMessageActivity extends BasicActivity implements EasyPerm
                                 //获取输出的文件Uri
                                 Uri destination = Uri.fromFile(file);
                                 //调用CropUtil的saveOutput将图片输出到指定的头像目录下
-                                CropUtil.saveOutput(ChangeUserMessageActivity.this, destination, croppedBitmap, 90);
+                                CropUtil.saveOutput(ChangeUserMessageActivity.this, destination, croppedBitmap, 50);
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
@@ -161,7 +172,7 @@ public class ChangeUserMessageActivity extends BasicActivity implements EasyPerm
                         }.start();
                         break;
 
-                    case AllStatic.CHANGENAME:
+                    case CHANGENAME:
                         //更新用户名
                         user.setMyUsername(changeMessageContent.getText().toString());
                         user.update(bmobUser.getObjectId(), new UpdateListener() {
@@ -178,7 +189,7 @@ public class ChangeUserMessageActivity extends BasicActivity implements EasyPerm
                             }
                         });
                         break;
-                    case AllStatic.CHANGEINDIVIDUALITY:
+                    case CHANGEINDIVIDUALITY:
                         //更新个性签名
                         user.setIndividuality(changeMessageContent.getText().toString());
                         user.update(bmobUser.getObjectId(), new UpdateListener() {
@@ -195,7 +206,7 @@ public class ChangeUserMessageActivity extends BasicActivity implements EasyPerm
                             }
                         });
                         break;
-                    case AllStatic.CHANGEPASSWORD:
+                    case CHANGEPASSWORD:
                         //更新用户密码，并进入Login界面
                         if (confirmPassword.getText().toString().equals(newPassword.getText().toString())) {
                             User.updateCurrentUserPassword(oldPassword.getText().toString(), newPassword.getText().toString(), new UpdateListener() {
@@ -224,30 +235,30 @@ public class ChangeUserMessageActivity extends BasicActivity implements EasyPerm
     public void initData() {
         //获取点击的类型，用于控制更新的内容
         Intent intent = getIntent();
-        type = intent.getStringExtra(AllStatic.CHANGETAG);
+        type = intent.getStringExtra(CHANGETAG);
         //根据传入的类型不同，显示不同的view，实现不同的更新
         switch (type){
-            case AllStatic.CHANGECAMERPICTURE:
-            case AllStatic.CHANGEPHOTOPICTURE:
+            case CHANGECAMERPICTURE:
+            case CHANGEPHOTOPICTURE:
                 changeMessageItemLayout.setVisibility(View.GONE);
                 changePasswordLayout.setVisibility(View.GONE);
                 titleText.setText("修改头像");
                 //更改头像
                 getPermissionAndChangePicture();
                 break;
-            case AllStatic.CHANGENAME:
+            case CHANGENAME:
                 changeMessagePicture.setVisibility(View.GONE);
                 changePasswordLayout.setVisibility(View.GONE);
                 titleText.setText("修改昵称");
                 changeMessageItem.setText("昵称：");
                 break;
-            case AllStatic.CHANGEINDIVIDUALITY:
+            case CHANGEINDIVIDUALITY:
                 changeMessagePicture.setVisibility(View.GONE);
                 changePasswordLayout.setVisibility(View.GONE);
                 titleText.setText("修改个性签名");
                 changeMessageItem.setText("个性签名：");
                 break;
-            case AllStatic.CHANGEPASSWORD:
+            case CHANGEPASSWORD:
                 changeMessagePicture.setVisibility(View.GONE);
                 changeMessageItemLayout.setVisibility(View.GONE);
                 titleText.setText("修改密码");
@@ -258,10 +269,10 @@ public class ChangeUserMessageActivity extends BasicActivity implements EasyPerm
     private void getPermissionAndChangePicture(){
         if(EasyPermissions.hasPermissions(this,perms)){
             switch (type){
-                case AllStatic.CHANGECAMERPICTURE:
+                case CHANGECAMERPICTURE:
                     openCamerChangePicture();
                     break;
-                case AllStatic.CHANGEPHOTOPICTURE:
+                case CHANGEPHOTOPICTURE:
                     openPhotoChangePicture();
                     break;
             }

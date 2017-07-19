@@ -1,5 +1,7 @@
 package com.example.bianqian.db;
 
+import java.util.List;
+
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobFile;
 
@@ -17,7 +19,37 @@ public class User extends BmobUser {
 
     private String birthday;
 
+    private Integer currentMonth;
+
+    private Integer empircalValue;
+
+    private List<String> signInDays;
+
     private String individuality;
+
+    public Integer getEmpircalValue() {
+        return empircalValue;
+    }
+
+    public void setEmpircalValue(Integer empircalValue) {
+        this.empircalValue = empircalValue;
+    }
+
+    public Integer getCurrentMonth() {
+        return currentMonth;
+    }
+
+    public void setCurrentMonth(Integer currentMonth) {
+        this.currentMonth = currentMonth;
+    }
+
+    public List<String> getSignInDays() {
+        return signInDays;
+    }
+
+    public void setSignInDays(List<String> signInDays) {
+        this.signInDays = signInDays;
+    }
 
     public String getBirthday() {
         return birthday;

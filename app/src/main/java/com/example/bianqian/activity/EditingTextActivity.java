@@ -109,12 +109,21 @@ public class EditingTextActivity extends BasicActivity implements View.OnClickLi
 
             @Override
             public void creatDataResult(Boolean isSuccess) {
-                finish();
+                if(isSuccess){
+                    finish();
+                }else {
+                    isComplete = false;
+                }
+
             }
 
             @Override
             public void upDataResult(Boolean isSuccess) {
-                finish();
+                if(isSuccess){
+                    finish();
+                }else {
+                    isComplete = false;
+                }
             }
         };
 

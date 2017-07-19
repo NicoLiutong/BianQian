@@ -37,4 +37,8 @@
     <color name="text_gray">#000000</color>
 
     <color name="text_background_all">#ffffff</color>
+
+    <color name="level_color">#73009d</color>
+    <color name="reached_color">#73009d</color>
+    <color name="unreached_color">#b7b7b7</color>
 </resources>

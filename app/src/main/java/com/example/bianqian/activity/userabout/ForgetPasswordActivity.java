@@ -1,5 +1,6 @@
 package com.example.bianqian.activity.userabout;
 
+import android.app.ProgressDialog;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -47,6 +48,8 @@ public class ForgetPasswordActivity extends BasicActivity {
         forgetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //设置progress
+                final ProgressDialog dialog = ProgressDialog.show(ForgetPasswordActivity.this, null, "请等待…", true, false);
                 //重置密码，获取email然后发送重置请求
                 final String email = forgetEmail.getText().toString();
                 User.resetPasswordByEmail(email, new UpdateListener() {
@@ -57,6 +60,7 @@ public class ForgetPasswordActivity extends BasicActivity {
                             finish();
                         }else{
                             ShowToast(ShowError.showError(e));
+                            dialog.dismiss();
                         }
                     }
                 });

@@ -13,6 +13,7 @@ import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,6 +23,7 @@ import com.example.bianqian.activity.userabout.LoginActivity;
 import com.example.bianqian.activity.userabout.UserMessageActivity;
 import com.example.bianqian.db.User;
 import com.example.bianqian.fragment.MoodNote;
+import com.example.bianqian.util.LevelUtils;
 
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.listener.BmobUpdateListener;
@@ -37,13 +39,15 @@ public class ApplicationMainActivity extends BasicActivity {
 
     private ImageView userPicture;
 
-    private TextView userName, userIndividuality;
+    private TextView userName, userIndividuality, level;
 
     private NavigationView navigationView;
 
     private View headView;
 
     private Button menuButton;
+
+    private ImageButton signInButton;
 
     private User user;
 
@@ -77,15 +81,27 @@ public class ApplicationMainActivity extends BasicActivity {
         headView = navigationView.getHeaderView(0);
         //从headview获取头像控件，textview控件
         userPicture = (ImageView) headView.findViewById(R.id.main_user_picture);
+        level = (TextView) headView.findViewById(R.id.main_user_level);
         userName = (TextView) headView.findViewById(R.id.main_user_name);
         userIndividuality = (TextView) headView.findViewById(R.id.main_user_individuality);
         //获取menubutton，用于打开drawerlayout
         menuButton = (Button) findViewById(R.id.drawer_menu);
+        //获取签到按钮
+        signInButton = (ImageButton) findViewById(R.id.sign_in_button);
 
     }
 
     @Override
     public void initListeners() {
+        //设置签到界面进入的监听
+        signInButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               Intent intent = new Intent(ApplicationMainActivity.this,SignInActivity.class);
+                ApplicationMainActivity.this.startActivity(intent);
+            }
+        });
+
         //设置监听打开drawerlayout
         menuButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -155,9 +171,9 @@ public class ApplicationMainActivity extends BasicActivity {
                         //ShowToast("缤纷彩");
                         break;
 
-                    case R.id.menu_setting:
+                    /*case R.id.menu_setting:
                         ShowToast("设置");
-                        break;
+                        break;*/
                     case R.id.menu_update_application:
                         //设置版本更新监听
                         BmobUpdateAgent.setUpdateListener(new BmobUpdateListener() {
@@ -199,9 +215,11 @@ public class ApplicationMainActivity extends BasicActivity {
         //判断当前的user是否存在，存在则初始化用户头像、名字、个性签名
         if(user != null){
             isLogin = true;
-        Glide.with(ApplicationMainActivity.this).load(user.getUesrImage().getUrl()).into(userPicture);
-        userName.setText(user.getMyUsername());
-        userIndividuality.setText(user.getIndividuality());
+            Glide.with(ApplicationMainActivity.this).load(user.getUesrImage().getUrl()).into(userPicture);
+            userName.setText(user.getMyUsername());
+            //Log.d("aaaaa",user.getEmpircalValue()+"");
+            level.setText("Lv " + LevelUtils.getLevel(user.getEmpircalValue())[0]);
+            userIndividuality.setText(user.getIndividuality());
             //不存在则进行不存在的初始化
         }else {
             isLogin = false;

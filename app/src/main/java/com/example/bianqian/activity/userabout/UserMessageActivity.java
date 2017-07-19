@@ -16,7 +16,7 @@ import com.bumptech.glide.Glide;
 import com.example.bianqian.R;
 import com.example.bianqian.activity.BasicActivity;
 import com.example.bianqian.db.User;
-import com.example.bianqian.util.AllStatic;
+import com.example.bianqian.util.AllSharedPreference;
 import com.example.bianqian.util.ShowError;
 import com.wx.wheelview.adapter.ArrayWheelAdapter;
 import com.wx.wheelview.widget.WheelView;
@@ -125,7 +125,7 @@ public class UserMessageActivity extends BasicActivity implements View.OnClickLi
                 break;
             //更改名字
             case R.id.user_message_name_layout:
-                startChangeActivity(AllStatic.CHANGETAG,AllStatic.CHANGENAME);
+                startChangeActivity(ChangeUserMessageActivity.CHANGETAG,ChangeUserMessageActivity.CHANGENAME);
                 break;
             //更改性别
             case R.id.user_message_sex_layout:
@@ -140,16 +140,20 @@ public class UserMessageActivity extends BasicActivity implements View.OnClickLi
                 break;
             //更改签名
             case R.id.user_message_individuality_layout:
-                startChangeActivity(AllStatic.CHANGETAG,AllStatic.CHANGEINDIVIDUALITY);
+                startChangeActivity(ChangeUserMessageActivity.CHANGETAG,ChangeUserMessageActivity.CHANGEINDIVIDUALITY);
                 break;
             //更改密码
             case R.id.change_password_button:
-                startChangeActivity(AllStatic.CHANGETAG,AllStatic.CHANGEPASSWORD);
+                startChangeActivity(ChangeUserMessageActivity.CHANGETAG,ChangeUserMessageActivity.CHANGEPASSWORD);
                 break;
             //退出登录
             case R.id.logout_button:
                 User user = BmobUser.getCurrentUser(User.class);
                 user.logOut();
+                AllSharedPreference preference = new AllSharedPreference(this);
+                preference.setAutomaticLogin(false);
+                preference.setUserName(null);
+                preference.setPassword(null);
                 Intent intent = new Intent(UserMessageActivity.this,LoginActivity.class);
                 UserMessageActivity.this.startActivity(intent);
                 finishAll();
@@ -165,10 +169,10 @@ public class UserMessageActivity extends BasicActivity implements View.OnClickLi
             public void onClick(DialogInterface dialog, final int which) {
                 if(choosePicture[which].equals("拍照")){
                     //处理拍照
-                    startChangeActivity(AllStatic.CHANGETAG,AllStatic.CHANGECAMERPICTURE);
+                    startChangeActivity(ChangeUserMessageActivity.CHANGETAG,ChangeUserMessageActivity.CHANGECAMERPICTURE);
                 }else {
                     //处理相册
-                    startChangeActivity(AllStatic.CHANGETAG,AllStatic.CHANGEPHOTOPICTURE);
+                    startChangeActivity(ChangeUserMessageActivity.CHANGETAG,ChangeUserMessageActivity.CHANGEPHOTOPICTURE);
                 }
             }
         });
@@ -253,6 +257,7 @@ public class UserMessageActivity extends BasicActivity implements View.OnClickLi
         mounthWheelView.setStyle(style);
         mounthWheelView.setExtraText("月", ContextCompat.getColor(this, R.color.colorAccent),40,60);
         mounthWheelView.setSkin(WheelView.Skin.None);
+        mounthWheelView.setLoop(true);
         mounthWheelView.setWheelData(creatMounth());
         mounthWheelView.setOnWheelItemSelectedListener(new WheelView.OnWheelItemSelectedListener() {
             @Override
@@ -267,6 +272,7 @@ public class UserMessageActivity extends BasicActivity implements View.OnClickLi
         dayWheelView.setStyle(style);
         dayWheelView.setExtraText("日", ContextCompat.getColor(this, R.color.colorAccent),40,60);
         dayWheelView.setSkin(WheelView.Skin.None);
+        dayWheelView.setLoop(true);
         dayWheelView.setWheelData(creatDay(year,mounth));
         dayWheelView.setOnWheelItemSelectedListener(new WheelView.OnWheelItemSelectedListener() {
             @Override

@@ -116,9 +116,9 @@ public class MoodNote extends Fragment {
                     }else {
                         return NOTEITEM;
                     }
-                }else {
-                    return NOLAYOUT;
                 }
+                    return NOLAYOUT;
+
                 }
             };
         changeData = new GetFindData<UserNote>() {

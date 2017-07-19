@@ -122,6 +122,9 @@ public class LoginActivity extends BasicActivity {
                             //进入主activity
                         }else {
                             dialog.dismiss();
+                            loginPreference.setAutomaticLogin(false);
+                            loginPreference.setUserName(null);
+                            loginPreference.setPassword(null);
                             ShowToast(ShowError.showError(e));
                         }
                     }

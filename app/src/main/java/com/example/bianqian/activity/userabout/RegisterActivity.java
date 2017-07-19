@@ -13,6 +13,8 @@ import com.example.bianqian.util.ShowError;
 import com.example.bianqian.view.LineEditText;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
@@ -78,6 +80,13 @@ public class RegisterActivity extends BasicActivity {
                                     user.setUsername(emailEdit.getText().toString());
                                     user.setEmail(emailEdit.getText().toString());
                                     user.setPassword(passwordEdit.getText().toString());
+                                    user.setCurrentMonth(0);
+                                    user.setEmpircalValue(0);
+                                    //初始化第一天
+                                    List<String> first = new ArrayList<String>();
+                                    first.add("19500101");
+                                    user.setSignInDays(first);
+
                                     user.setBirthday("1970-01-01");
                                     user.setIndividuality("这个人好懒，神马都没有");
                                     user.setSex("未知生物");

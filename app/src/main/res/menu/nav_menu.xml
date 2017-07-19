@@ -30,9 +30,11 @@
 
     <group android:id="@+id/ground2"
            android:checkableBehavior="none">
+        <!--
         <item android:id="@+id/menu_setting"
               android:icon="@drawable/ic_menu_setting"
               android:title="@string/setting"/>
+              -->
         <item android:id="@+id/menu_update_application"
               android:icon="@drawable/ic_menu_refresh"
               android:title="@string/update_application"/>
