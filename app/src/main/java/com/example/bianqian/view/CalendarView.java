@@ -144,7 +144,7 @@ public class CalendarView extends View {
                 canvas.drawText(dayStr, startX, startY, mPaint);
             }else{
                 //判断当天是否可点击
-                if(mSelectedDates.contains(getSelData(mSelYear, mSelMonth, mDays[row][column]))){
+                if(mOptionalDates.contains(getSelData(mSelYear, mSelMonth, mDays[row][column]))){
                     // 没有点击过，绘制默认背景
                     canvas.drawBitmap(mBgNotOptBitmap,mColumnSize*column+(mColumnSize-mBgNotOptBitmap.getWidth())/2,mRowSize*row+(mRowSize-mBgNotOptBitmap.getHeight())/2,mPaint);
                     mPaint.setColor(mDayNormalColor);

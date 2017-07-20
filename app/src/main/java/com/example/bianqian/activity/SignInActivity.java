@@ -46,7 +46,10 @@ public class SignInActivity extends BasicActivity {
     private int mEveryDayEmpircalValue;
 
     //已选择的日期
-    private List<String> signInDays = new ArrayList<>();;
+    private List<String> signInDays = new ArrayList<>();
+
+    //日期是否可点击，防止多次点击
+    private boolean isDateClick = true;
 
     private ImageButton backButton;
 
@@ -87,40 +90,45 @@ public class SignInActivity extends BasicActivity {
         calendarView.setOnClickDate(new CalendarView.OnClickListener() {
             @Override
             public void onClickDateListener(String selectDate) {
-                Log.d("select",selectDate);
-                if(isCurrentMonth){
-                    //如果是当月，将签到日期累加
-                    signInDays.add(selectDate);
-                }else {
-                    //如果不是当月，初始化新的日期
-                    signInDays.clear();
-                    signInDays.add(selectDate);
-                }
-                //更新经验
-                mEveryDayEmpircalValue = getEveryDayEmpircalValue();
-                mEmpircalValue = mEmpircalValue + mEveryDayEmpircalValue;
-
-                User upUser = new User();
-                upUser.setCurrentMonth(currentMonth);
-                upUser.setSignInDays(signInDays);
-                upUser.setEmpircalValue(mEmpircalValue);
-                upUser.update(user.getObjectId(), new UpdateListener() {
-                    @Override
-                    public void done(BmobException e) {
-                        if(e == null){
-                            ShowToast("签到成功 经验+" + mEveryDayEmpircalValue);
-                            setLeve(mEmpircalValue);
-                        }else {
-                            ShowToast(ShowError.showError(e));
-                            //失败需要重新绘制Calendar
-                            calendarView.setSelectedDates(mSelectDays);
-                            calendarView.invalidate();
-                            mEmpircalValue = mEmpircalValue - mEveryDayEmpircalValue;
-                        }
+                //Log.d("select",selectDate);
+                if(isDateClick) {
+                    isDateClick = false;
+                    if (isCurrentMonth) {
+                        //如果是当月，将签到日期累加
+                        signInDays.add(selectDate);
+                    } else {
+                        //如果不是当月，初始化新的日期
+                        signInDays.clear();
+                        signInDays.add(selectDate);
                     }
-                });
+                    //更新经验
+                    mEveryDayEmpircalValue = getEveryDayEmpircalValue();
+                    mEmpircalValue = mEmpircalValue + mEveryDayEmpircalValue;
+
+                    User upUser = new User();
+                    upUser.setCurrentMonth(currentMonth);
+                    upUser.setSignInDays(signInDays);
+                    upUser.setEmpircalValue(mEmpircalValue);
+                    upUser.update(user.getObjectId(), new UpdateListener() {
+                        @Override
+                        public void done(BmobException e) {
+                            if (e == null) {
+                                ShowToast("签到成功 经验+" + mEveryDayEmpircalValue);
+                                setLeve(mEmpircalValue);
+                            } else {
+                                ShowToast(ShowError.showError(e));
+                                isDateClick = true;
+                                //失败需要重新绘制Calendar
+                                calendarView.setSelectedDates(mSelectDays);
+                                calendarView.invalidate();
+                                mEmpircalValue = mEmpircalValue - mEveryDayEmpircalValue;
+                            }
+                        }
+                    });
+                }
             }
         });
+
     }
 
     @Override
