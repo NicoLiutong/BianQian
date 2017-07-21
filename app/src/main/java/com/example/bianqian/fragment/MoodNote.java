@@ -269,7 +269,7 @@ public class MoodNote extends Fragment {
         }
 
         holder.setCircleColor(R.id.note_circle,circleColor);
-        holder.setBackGround(R.id.note_card_color,backgroundColor);
+        holder.setCardBackGround(R.id.note_card_color,backgroundColor);
         holder.setTextColor(R.id.note_text,textColor);
         holder.setText(R.id.note_text,adapterDate.getUserNote().getNote());
         holder.setText(R.id.note_item_date,adapterDate.getUserNote().getUpdatedAt());

@@ -1,5 +1,6 @@
 package com.example.bianqian.activity;
 
+import android.app.ProgressDialog;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
@@ -45,11 +46,11 @@ public class SignInActivity extends BasicActivity {
     //当天获得的经验
     private int mEveryDayEmpircalValue;
 
+    //本月签到天数
+    private int dateNumber;
+
     //已选择的日期
     private List<String> signInDays = new ArrayList<>();
-
-    //日期是否可点击，防止多次点击
-    private boolean isDateClick = true;
 
     private ImageButton backButton;
 
@@ -89,18 +90,31 @@ public class SignInActivity extends BasicActivity {
 
         calendarView.setOnClickDate(new CalendarView.OnClickListener() {
             @Override
-            public void onClickDateListener(String selectDate) {
+            public void onClickDateListener(final String selectDate) {
+                final ProgressDialog dialog = ProgressDialog.show(SignInActivity.this, null, null, true, false);
+                /*for (String i:signInDays){
+                    Log.d("date1",i );
+                }*/
                 //Log.d("select",selectDate);
-                if(isDateClick) {
-                    isDateClick = false;
                     if (isCurrentMonth) {
                         //如果是当月，将签到日期累加
                         signInDays.add(selectDate);
+                       // Log.d("12","12");
                     } else {
                         //如果不是当月，初始化新的日期
                         signInDays.clear();
                         signInDays.add(selectDate);
+                       // Log.d("12","23");
                     }
+               /* Log.d("selectDate",selectDate);
+                Log.d("1","1");
+                for (String i:signInDays){
+                    Log.d("date2",i );
+                }
+
+                for (String i:mSelectDays){
+                    Log.d("date3",i );
+                }*/
                     //更新经验
                     mEveryDayEmpircalValue = getEveryDayEmpircalValue();
                     mEmpircalValue = mEmpircalValue + mEveryDayEmpircalValue;
@@ -114,18 +128,21 @@ public class SignInActivity extends BasicActivity {
                         public void done(BmobException e) {
                             if (e == null) {
                                 ShowToast("签到成功 经验+" + mEveryDayEmpircalValue);
+                                dateNumber = signInDays.size();
                                 setLeve(mEmpircalValue);
+                                dialog.dismiss();
                             } else {
                                 ShowToast(ShowError.showError(e));
-                                isDateClick = true;
                                 //失败需要重新绘制Calendar
+                                mSelectDays.remove(selectDate);
                                 calendarView.setSelectedDates(mSelectDays);
                                 calendarView.invalidate();
                                 mEmpircalValue = mEmpircalValue - mEveryDayEmpircalValue;
-                            }
+                                dialog.dismiss();
+                           }
                         }
                     });
-                }
+
             }
         });
 
@@ -153,7 +170,7 @@ public class SignInActivity extends BasicActivity {
         //设置Progress
         levelProgressBar.setMax(LevelUtils.getLevel(empircalValue)[2]);
         levelProgressBar.setProgress(LevelUtils.getLevel(empircalValue)[1]);
-        signInAllMonthDays.setText("本月签到" + signInDays.size() + "天");
+        signInAllMonthDays.setText("本月签到" + dateNumber + "天");
     }
 
     //获取签到获得的经验
@@ -172,8 +189,10 @@ public class SignInActivity extends BasicActivity {
         //判断当天是否是正在签到的月份
         if(user.getCurrentMonth() == currentMonth){
             isCurrentMonth = true;
+            dateNumber = user.getSignInDays().size();
         }else {
             isCurrentMonth = false;
+            dateNumber = 0;
         }
         //设置签到月份
         this.currentMonth = currentMonth;
@@ -202,10 +221,9 @@ public class SignInActivity extends BasicActivity {
     //初始化已选择的日期
     private void initSelectDays(){
         signInDays = user.getSignInDays();
-
-        mSelectDays = signInDays;
-        for(String s:mSelectDays){
-            Log.d("selectDays",s);
+        for(String s:signInDays){
+            mSelectDays.add(s);
+           // Log.d("selectDays",s);
         }
     }
 }

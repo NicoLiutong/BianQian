@@ -2,6 +2,7 @@ package com.example.bianqian.adapter;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -51,6 +52,12 @@ public class MyViewHolder extends RecyclerView.ViewHolder {
     public MyViewHolder setBackGround(int viewId, int color){
         View view = getView(viewId);
         view.setBackgroundColor(ContextCompat.getColor(mContext, color));
+        return this;
+    }
+
+    public MyViewHolder setCardBackGround(int viewId, int color){
+        CardView view = getView(viewId);
+        view.setCardBackgroundColor(ContextCompat.getColor(mContext, color));
         return this;
     }
 
