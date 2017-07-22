@@ -138,6 +138,11 @@ public class CalendarView extends View {
      // 判断当前天数是否被点击过
             if(mSelectedDates.contains(getSelData(mSelYear, mSelMonth, mDays[row][column]))){
                     // 点击过，绘制点击过的背景
+                    /* mPaint.setAntiAlias(false);                       //设置画笔为无锯齿
+                    mPaint.setColor(mDayNormalColor);                    //设置画笔颜色
+                    mPaint.setStrokeWidth((float) 1.0);              //线宽
+                    mPaint.setStyle(Paint.Style.FILL);                   //空心效果
+                    canvas.drawCircle(mColumnSize*column+mColumnSize/2, mRowSize*row+mRowSize/2, Math.min(mColumnSize,mRowSize)/2, mPaint);    */
                     canvas.drawBitmap(mBgOptBitmap,mColumnSize*column+(mColumnSize-mBgOptBitmap.getWidth())/2,mRowSize*row+(mRowSize-mBgOptBitmap.getHeight())/2,mPaint);
                     mPaint.setColor(mDayPressedColor);
                 // 绘制天数
@@ -146,6 +151,11 @@ public class CalendarView extends View {
                 //判断当天是否可点击
                 if(mOptionalDates.contains(getSelData(mSelYear, mSelMonth, mDays[row][column]))){
                     // 没有点击过，绘制默认背景
+                   /* mPaint.setAntiAlias(false);                       //设置画笔为无锯齿
+                    mPaint.setColor(mDayNormalColor);                    //设置画笔颜色
+                    mPaint.setStrokeWidth((float) 1.0);              //线宽
+                    mPaint.setStyle(Paint.Style.STROKE);                   //空心效果
+                    canvas.drawCircle(mColumnSize*column+mColumnSize/2, mRowSize*row+mRowSize/2, Math.min(mColumnSize,mRowSize)/2, mPaint);    */
                     canvas.drawBitmap(mBgNotOptBitmap,mColumnSize*column+(mColumnSize-mBgNotOptBitmap.getWidth())/2,mRowSize*row+(mRowSize-mBgNotOptBitmap.getHeight())/2,mPaint);
                     mPaint.setColor(mDayNormalColor);
                 }else {
