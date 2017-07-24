@@ -57,7 +57,7 @@
         android:layout_alignBottom="@id/level_text"
         android:layout_toRightOf="@id/level_text"
         app:progress_reached_bar_height="3dp"
-        app:progress_unreached_bar_height="1dp"
+        app:progress_unreached_bar_height="2dp"
         app:progress_reached_color="@color/reached_color"
         app:progress_unreached_color="@color/unreached_color"
         android:layout_centerHorizontal="true"/>

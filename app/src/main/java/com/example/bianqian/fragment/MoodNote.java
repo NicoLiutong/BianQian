@@ -1,5 +1,6 @@
 package com.example.bianqian.fragment;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -53,6 +54,9 @@ public class MoodNote extends Fragment {
     private String mood = ALL;
 
     private User user;
+
+    private ProgressDialog dialog ;
+
     private RecyclerView mainRecyclerView;
 
     private Button cancleButton,deletButton;
@@ -83,6 +87,7 @@ public class MoodNote extends Fragment {
         addNewNoteButton = (FloatingActionButton) view.findViewById(R.id.floating_newitem_button);
         swipeRefreshNote = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_note);
         swipeRefreshNote.setColorSchemeResources(R.color.text_background_purple,R.color.colorAccent,R.color.text_background_pink,R.color.text_background_red);
+        dialog = new ProgressDialog(getActivity());
         swipeRefreshNote.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -137,6 +142,7 @@ public class MoodNote extends Fragment {
             public void deletDataResult(Boolean isSuccess) {
                 //删除完数据后，获取删除成功的项目并更新
                 intialize();
+
             }
 
             @Override
@@ -196,6 +202,9 @@ public class MoodNote extends Fragment {
         deletButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                dialog.setMessage("删除中…");
+                dialog.show();
+                //dialog = ProgressDialog.show(getActivity(), null, "删除中…", true, false);
                 List<String> noteIds = new ArrayList<String>();
                 List<Integer> position = adapter.getSelectItems();
                 for(int i : position){
@@ -340,6 +349,7 @@ public class MoodNote extends Fragment {
         }
         adapter.notifyDataSetChanged();
         swipeRefreshNote.setRefreshing(false);
+        dialog.dismiss();
     }
 
     private List<AdapterDateList> getListWithMood(String mood,List<UserNote> alldata){

@@ -1,8 +1,6 @@
 package com.example.bianqian.view;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -11,7 +9,6 @@ import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.example.bianqian.R;
 import com.example.bianqian.util.DateUtils;
 
 import java.util.ArrayList;
@@ -71,10 +68,6 @@ public class CalendarView extends View {
     private int mMonthDays;
     // 当月第一天位于周几
     private int mWeekNumber;
-    // 已选中背景Bitmap
-    private Bitmap mBgOptBitmap;
-    // 未选中背景Bitmap
-    private Bitmap mBgNotOptBitmap;
 
     public CalendarView(Context context) {
         super(context);
@@ -103,9 +96,6 @@ public class CalendarView extends View {
         mCurDate    =   calendar.get(Calendar.DATE);
         setSelYTD(mCurYear, mCurMonth, mCurDate);
 
-        // 获取背景Bitmap
-        mBgOptBitmap    = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_is_sign_in);
-        mBgNotOptBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_no_sign_in);
     }
 
     @Override
@@ -134,16 +124,15 @@ public class CalendarView extends View {
             mDays[row][column] = day + 1;
             int startX = (int) (mColumnSize * column + (mColumnSize - mPaint.measureText(dayStr)) / 2);
             int startY = (int) (mRowSize * row + mRowSize / 2 - (mPaint.ascent() + mPaint.descent()) / 2);
-
+            float strokeWidth = mPaint.getStrokeWidth();
      // 判断当前天数是否被点击过
             if(mSelectedDates.contains(getSelData(mSelYear, mSelMonth, mDays[row][column]))){
                     // 点击过，绘制点击过的背景
-                    /* mPaint.setAntiAlias(false);                       //设置画笔为无锯齿
+                     mPaint.setAntiAlias(false);                       //设置画笔为无锯齿
                     mPaint.setColor(mDayNormalColor);                    //设置画笔颜色
-                    mPaint.setStrokeWidth((float) 1.0);              //线宽
                     mPaint.setStyle(Paint.Style.FILL);                   //空心效果
-                    canvas.drawCircle(mColumnSize*column+mColumnSize/2, mRowSize*row+mRowSize/2, Math.min(mColumnSize,mRowSize)/2, mPaint);    */
-                    canvas.drawBitmap(mBgOptBitmap,mColumnSize*column+(mColumnSize-mBgOptBitmap.getWidth())/2,mRowSize*row+(mRowSize-mBgOptBitmap.getHeight())/2,mPaint);
+                    canvas.drawCircle(mColumnSize*column+mColumnSize/2, mRowSize*row+mRowSize/2, Math.min(mColumnSize,mRowSize)/2 - 10, mPaint);
+                  //  canvas.drawBitmap(mBgOptBitmap,mColumnSize*column+(mColumnSize-mBgOptBitmap.getWidth())/2,mRowSize*row+(mRowSize-mBgOptBitmap.getHeight())/2,mPaint);
                     mPaint.setColor(mDayPressedColor);
                 // 绘制天数
                 canvas.drawText(dayStr, startX, startY, mPaint);
@@ -151,13 +140,14 @@ public class CalendarView extends View {
                 //判断当天是否可点击
                 if(mOptionalDates.contains(getSelData(mSelYear, mSelMonth, mDays[row][column]))){
                     // 没有点击过，绘制默认背景
-                   /* mPaint.setAntiAlias(false);                       //设置画笔为无锯齿
+                    mPaint.setAntiAlias(false);                       //设置画笔为无锯齿
                     mPaint.setColor(mDayNormalColor);                    //设置画笔颜色
-                    mPaint.setStrokeWidth((float) 1.0);              //线宽
+                    mPaint.setStrokeWidth((float) 3.0);              //线宽
                     mPaint.setStyle(Paint.Style.STROKE);                   //空心效果
-                    canvas.drawCircle(mColumnSize*column+mColumnSize/2, mRowSize*row+mRowSize/2, Math.min(mColumnSize,mRowSize)/2, mPaint);    */
-                    canvas.drawBitmap(mBgNotOptBitmap,mColumnSize*column+(mColumnSize-mBgNotOptBitmap.getWidth())/2,mRowSize*row+(mRowSize-mBgNotOptBitmap.getHeight())/2,mPaint);
+                    canvas.drawCircle(mColumnSize*column+mColumnSize/2, mRowSize*row+mRowSize/2, Math.min(mColumnSize,mRowSize)/2 - 10, mPaint);
+                   // canvas.drawBitmap(mBgNotOptBitmap,mColumnSize*column+(mColumnSize-mBgNotOptBitmap.getWidth())/2,mRowSize*row+(mRowSize-mBgNotOptBitmap.getHeight())/2,mPaint);
                     mPaint.setColor(mDayNormalColor);
+                    mPaint.setStrokeWidth(strokeWidth);
                 }else {
                 mPaint.setColor(mDayNotOptColor);
                 }
@@ -369,16 +359,6 @@ public class CalendarView extends View {
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        recyclerBitmap(mBgOptBitmap);
-        recyclerBitmap(mBgNotOptBitmap);
     }
 
-    /**
-     * 释放Bitmap资源
-     */
-    private void recyclerBitmap(Bitmap bitmap) {
-        if(bitmap != null && !bitmap.isRecycled()){
-            bitmap.recycle();
-        }
-    }
 }
