@@ -37,17 +37,18 @@ import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
 import static android.content.Intent.FLAG_GRANT_WRITE_URI_PERMISSION;
 
 public class ChangeUserMessageActivity extends BasicActivity implements EasyPermissions.PermissionCallbacks {
-
+    
+    //从相机获取头像
     public static final String CHANGECAMERPICTURE = "changecamerpicture";
-
+    //从相册获取头像
     public static final String CHANGEPHOTOPICTURE = "changephotopicture";
-
+    //获取修改的类型去选择显示的组建
     public static final String CHANGETAG = "tag";
-
+    //改变名字
     public static final String CHANGENAME = "changename";
-
+    //改变签名
     public static final String CHANGEINDIVIDUALITY = "changeindividuality";
-
+    //改变密码
     public static final String CHANGEPASSWORD = "changepassword";
 
     private Button backButton, completeButton;
@@ -59,12 +60,13 @@ public class ChangeUserMessageActivity extends BasicActivity implements EasyPerm
     private LinearLayout changeMessageItemLayout, changePasswordLayout;
 
     private EditText changeMessageContent, oldPassword, newPassword, confirmPassword;
-
+    
     private String type, camerPathUri;
-
+    //权限数组
     private String[] perms;
-
+    //用于调用相机返回的标志
     private static final int SELECT_THROW_CAMER = 100;
+    //用于调用相册返回的标志
     private static final int SELECT_THROW_PHOTO = 101;
 
     @Override
