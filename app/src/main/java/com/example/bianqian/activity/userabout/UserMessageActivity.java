@@ -42,11 +42,11 @@ public class UserMessageActivity extends BasicActivity implements View.OnClickLi
     private CircleImageView userPicture;
 
     private WheelView yearWheelView,mounthWheelView,dayWheelView;
-
+    //初始化选择生日的日期
     private String year = "1960",mounth = "1",day = "1";
-
+    //是否验证邮箱
     private boolean emailVerified;
-
+    //用户邮箱
     private String userEmail;
 
     @Override
@@ -87,7 +87,7 @@ public class UserMessageActivity extends BasicActivity implements View.OnClickLi
         userEmailVerifiedLayout.setOnClickListener(this);
         userIndividualityLayout.setOnClickListener(this);
     }
-
+    //初始标题和颜色
     @Override
     public void initData() {
         titleLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.colorAccent));
@@ -146,7 +146,7 @@ public class UserMessageActivity extends BasicActivity implements View.OnClickLi
             case R.id.change_password_button:
                 startChangeActivity(ChangeUserMessageActivity.CHANGETAG,ChangeUserMessageActivity.CHANGEPASSWORD);
                 break;
-            //退出登录
+            //退出登录,并清除存储的密码和用户名
             case R.id.logout_button:
                 User user = BmobUser.getCurrentUser(User.class);
                 user.logOut();
@@ -162,6 +162,7 @@ public class UserMessageActivity extends BasicActivity implements View.OnClickLi
     }
 
     private void changeUserPicture(){
+        //弹出选择照相和相册的对话框
         AlertDialog.Builder pictureBuilder = new AlertDialog.Builder(UserMessageActivity.this,R.style.MyDialog);
         final String[] choosePicture = {"拍照","相册"};
         pictureBuilder.setItems(choosePicture, new DialogInterface.OnClickListener() {
@@ -180,6 +181,7 @@ public class UserMessageActivity extends BasicActivity implements View.OnClickLi
     }
 
     private void changeUserSex(){
+        //弹出选择性别的对话框，并根据选择结果更新用户信息
         AlertDialog.Builder sexBuilder = new AlertDialog.Builder(UserMessageActivity.this,R.style.MyDialog);
         final String[] sexs = {"男","女","未知生物"};
         sexBuilder.setItems(sexs, new DialogInterface.OnClickListener() {
@@ -204,15 +206,19 @@ public class UserMessageActivity extends BasicActivity implements View.OnClickLi
     }
 
     private void changeUserBirthday(){
+        //选择日起的弹出框
         final AlertDialog.Builder birthdayBuider = new AlertDialog.Builder(this, R.style.MyDialog);
+        //设置点击旁边可以取消弹框
         birthdayBuider.setCancelable(true);
+        //动态加载View
         View selectView = View.inflate(this,R.layout.select_date_wheel,null);
         birthdayBuider.setView(selectView);
+        //设置从底部弹出显示在底部
         final AlertDialog dialog = birthdayBuider.create();
         Window window = dialog.getWindow();
         window.setGravity(Gravity.BOTTOM);
         dateSelectButton = (Button) selectView.findViewById(R.id.affirm_button);
-
+        //更新用户生日
         dateSelectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -232,7 +238,7 @@ public class UserMessageActivity extends BasicActivity implements View.OnClickLi
                 });
             }
         });
-
+        //初始化Wheel
         WheelView.WheelViewStyle style = new WheelView.WheelViewStyle();
         style.selectedTextSize = 16;
         style.textSize = 13;
