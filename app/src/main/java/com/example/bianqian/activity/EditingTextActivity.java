@@ -25,16 +25,21 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.QueryListener;
 
 public class EditingTextActivity extends BasicActivity implements View.OnClickListener {
-
+    //创建新的文本
     public static final String CREATNOTE = "creatNote";
+    //更正文本
     public static final String CHANGENOTE = "changeNote";
-
+    //心情颜色
     public static final String MOOD = "mood";
+    //日期
     public static final String DATE = "date";
+    //文本
     public static final String TEXT = "text";
+    //创建或更新类型
     public static final String TYPE = "type";
+    //文本id
     public static final String NOTEID = "noteId";
-
+    //防止多次点击完成
     private boolean isComplete;
     private Button completeButton, redButton, purpleButton, pinkButton, yellowButton, greenButton, blueButton, grayButton;
 
@@ -44,7 +49,7 @@ public class EditingTextActivity extends BasicActivity implements View.OnClickLi
     private EditText editText;
 
     private LinearLayout backgroundLayout;
-
+    //创建新的文本的初始值
     private String moodColor = "red";
     private String text = null;
     private String date = null;
@@ -90,8 +95,10 @@ public class EditingTextActivity extends BasicActivity implements View.OnClickLi
 
     @Override
     public void initData() {
+        //获取当前用户
         user = BmobUser.getCurrentUser(User.class);
         Intent intent = getIntent();
+        //获取一些传入的参数
         editType = intent.getStringExtra(TYPE);
         date = intent.getStringExtra(DATE);
         text = intent.getStringExtra(TEXT);
@@ -99,14 +106,14 @@ public class EditingTextActivity extends BasicActivity implements View.OnClickLi
         noteId = intent.getStringExtra(NOTEID);
 
         isComplete = false;
-
+        //数据操作的回调
         getResult = new GetFindData<UserNote>() {
             @Override
             public void returnFindData(List<UserNote> findData,Boolean isSuccess) {    }
 
             @Override
             public void deletDataResult(Boolean isSuccess) {     }
-
+            //新建数据成功会关闭该Activity
             @Override
             public void creatDataResult(Boolean isSuccess) {
                 if(isSuccess){
@@ -116,7 +123,7 @@ public class EditingTextActivity extends BasicActivity implements View.OnClickLi
                 }
 
             }
-
+            //更新数据成功会关闭该Activity
             @Override
             public void upDataResult(Boolean isSuccess) {
                 if(isSuccess){
@@ -126,11 +133,11 @@ public class EditingTextActivity extends BasicActivity implements View.OnClickLi
                 }
             }
         };
-
+        //如果是创建数据调用CreateNote方法
         if(editType.equals(CREATNOTE)){
             intilizeCreatNote(moodColor);
         }
-
+        //如果是更新数据调用ChangeNote方法
         if(editType.equals(CHANGENOTE)){
             intilizeChangeNote(moodColor);
         }
@@ -139,9 +146,11 @@ public class EditingTextActivity extends BasicActivity implements View.OnClickLi
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            //返回键直接关闭activity
             case R.id.editing_backbutton:
                 finish();
                 break;
+            //颜色键调用颜色改变的方法
             case R.id.editing_red_button:
                 moodColor = "red";
                 intilizeColor(moodColor);
@@ -171,6 +180,7 @@ public class EditingTextActivity extends BasicActivity implements View.OnClickLi
                 intilizeColor(moodColor);
                 break;
             case R.id.editing_complete:
+                //完成键先设置isComplete为true防止多次点击，然后根据类型分别创建或更新数据
                 if (!isComplete) {
                     isComplete = true;
                     UserNote userNote = new UserNote();
@@ -247,14 +257,17 @@ public class EditingTextActivity extends BasicActivity implements View.OnClickLi
     }
 
     private void intilizeCreatNote(String color){
+        //获取服务器的时间
         Bmob.getServerTime(new QueryListener<Long>() {
             @Override
             public void done(Long aLong, BmobException e) {
                 if(e == null){
+                    //从服务器获得
                     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
                     String times = format.format(new Date(aLong * 1000L));
                     textDate.setText(times);
                 }else {
+                    //从本地获得
                     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
                     String times = format.format(new Date(System.currentTimeMillis()));
                     textDate.setText(times);
@@ -265,7 +278,7 @@ public class EditingTextActivity extends BasicActivity implements View.OnClickLi
         editText.setText(text);
         intilizeColor(color);
     }
-
+    //初始文本
     private void intilizeChangeNote(String color){
         textDate.setText(date);
         editText.setText(text);
