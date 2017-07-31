@@ -242,13 +242,15 @@ public class ApplicationMainActivity extends BasicActivity {
     //退出方法：先判断isExit是否为true，不为true则将其设置为true并显示“再按一次退出程序”；然后发送一条消息，在两秒后将isExit再次设置为false
     //如果isExit为true则直接退出
     private void exit(){
-        if(!isExit){
+        if(drawerLayout.isOpenDrawer(GravityCompat.START)){
+            drawerLayout.closeDrawer(GravityCompat.START);
+        }else if(!isExit){
             isExit = true;
             ShowToast("再按一次退出程序");
             mHandle.sendEmptyMessageDelayed(EXIT_APPLICATION,2000);
         }else {
             System.exit(0);
-        }
+        }       
     }
     private Handler mHandle = new Handler(){
         @Override
