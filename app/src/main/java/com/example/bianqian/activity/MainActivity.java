@@ -37,7 +37,7 @@ public class MainActivity extends BasicActivity {
     @Override
     public void initData() {
         //直接发送一条3秒后执行的消息
-        mHandler.sendEmptyMessageDelayed(GO_HOME, 3000);
+        mHandler.sendEmptyMessageDelayed(GO_HOME, 1000);
         //先判断是否记住密码，如果记住了判断是否有本地uesr，没有再登陆，并将canGohome设置为true，否则为false
         AllSharedPreference preference = new AllSharedPreference(this);
         if(preference.getAutomaticLogin()) {

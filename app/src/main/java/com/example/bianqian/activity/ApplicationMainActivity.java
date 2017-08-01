@@ -1,6 +1,7 @@
 package com.example.bianqian.activity;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
@@ -24,6 +25,8 @@ import com.example.bianqian.activity.userabout.UserMessageActivity;
 import com.example.bianqian.bmobbasic.User;
 import com.example.bianqian.fragment.MoodNote;
 import com.example.bianqian.util.LevelUtils;
+
+import org.litepal.LitePal;
 
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.listener.BmobUpdateListener;
@@ -61,6 +64,7 @@ public class ApplicationMainActivity extends BasicActivity {
     @Override
     public void setContentView() {
         setContentView(R.layout.activity_application_main);
+        SQLiteDatabase db = LitePal.getDatabase();
     }
 
     @Override
@@ -188,6 +192,13 @@ public class ApplicationMainActivity extends BasicActivity {
                         });
                         BmobUpdateAgent.forceUpdate(ApplicationMainActivity.this);
                         //ShowToast("更新");
+                        break;
+                    case R.id.menu_share:
+                        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                        shareIntent.setType("text/plain");
+                        shareIntent.putExtra(Intent.EXTRA_TEXT,"喵记  记录你每一天的快乐\nhttps://github.com/NicoLiutong/BianQian/blob/master/%E5%96%B5%E8%AE%B0.apk");
+                        shareIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(Intent.createChooser(shareIntent,"喵记"));
                         break;
                 }
                 return true;

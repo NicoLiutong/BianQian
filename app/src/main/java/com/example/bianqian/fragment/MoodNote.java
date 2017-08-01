@@ -224,6 +224,8 @@ public class MoodNote extends Fragment {
    @Override
     public void onResume() {
        //Log.d("1","1");
+       //data.clear();
+       //adapter.notifyDataSetChanged();
        swipeRefreshNote.setRefreshing(true);
        intialize();
         super.onResume();
@@ -278,7 +280,8 @@ public class MoodNote extends Fragment {
         }
 
         holder.setCircleColor(R.id.note_circle,circleColor);
-        holder.setCardBackGround(R.id.note_card_color,backgroundColor);
+        //holder.setCardBackGround(R.id.note_card_color,backgroundColor);
+        holder.setBackGround(R.id.note_text,backgroundColor);
         holder.setTextColor(R.id.note_text,textColor);
         holder.setText(R.id.note_text,adapterDate.getUserNote().getNote());
         holder.setText(R.id.note_item_date,adapterDate.getUserNote().getUpdatedAt());
@@ -436,7 +439,5 @@ public class MoodNote extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        data.clear();
-        adapter.notifyDataSetChanged();
     }
 }

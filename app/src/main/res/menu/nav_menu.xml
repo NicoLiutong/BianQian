@@ -35,6 +35,10 @@
               android:icon="@drawable/ic_menu_setting"
               android:title="@string/setting"/>
               -->
+        <item android:id="@+id/menu_share"
+            android:icon="@drawable/ic_menu_share"
+            android:title="@string/share"/>
+
         <item android:id="@+id/menu_update_application"
               android:icon="@drawable/ic_menu_refresh"
               android:title="@string/update_application"/>

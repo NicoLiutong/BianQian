@@ -19,10 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobUser;
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.QueryListener;
 
 public class EditingTextActivity extends BasicActivity implements View.OnClickListener {
     //创建新的文本
@@ -257,23 +254,27 @@ public class EditingTextActivity extends BasicActivity implements View.OnClickLi
     }
 
     private void intilizeCreatNote(String color){
+        //从本地获得
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String times = format.format(new Date(System.currentTimeMillis()));
+        textDate.setText(times);
         //获取服务器的时间
-        Bmob.getServerTime(new QueryListener<Long>() {
+        /*Bmob.getServerTime(new QueryListener<Long>() {
             @Override
             public void done(Long aLong, BmobException e) {
                 if(e == null){
                     //从服务器获得
-                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     String times = format.format(new Date(aLong * 1000L));
                     textDate.setText(times);
                 }else {
                     //从本地获得
-                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     String times = format.format(new Date(System.currentTimeMillis()));
                     textDate.setText(times);
                 }
             }
-        });
+        });*/
 
         editText.setText(text);
         intilizeColor(color);
