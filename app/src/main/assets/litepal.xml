@@ -7,7 +7,7 @@
     <version value="1" />
 
     <list>
-        <mapping class="com.example.bianqian.db.UserNote" />
+        <mapping class="com.example.bianqian.db.LocalUserNote" />
     </list>
 
 

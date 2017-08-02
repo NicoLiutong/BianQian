@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.example.bianqian.R;
 import com.example.bianqian.bmobbasic.User;
 import com.example.bianqian.bmobbasic.UserNote;
+import com.example.bianqian.db.LocalUserNote;
 import com.example.bianqian.impl.GetFindData;
 import com.example.bianqian.util.UpdateUserNote;
 
@@ -109,7 +110,18 @@ public class EditingTextActivity extends BasicActivity implements View.OnClickLi
             public void returnFindData(List<UserNote> findData,Boolean isSuccess) {    }
 
             @Override
-            public void deletDataResult(Boolean isSuccess) {     }
+            public void deletDataResult(List<LocalUserNote> deletSuccessItem) {     }
+
+            @Override
+            public void creatNotesResult(List<LocalUserNote> creatSuccessItems) {
+
+            }
+
+            @Override
+            public void updateNotesResult(List<LocalUserNote> updateSuccessItems) {
+
+            }
+
             //新建数据成功会关闭该Activity
             @Override
             public void creatDataResult(Boolean isSuccess) {

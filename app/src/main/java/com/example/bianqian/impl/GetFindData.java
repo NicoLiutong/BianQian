@@ -1,5 +1,7 @@
 package com.example.bianqian.impl;
 
+import com.example.bianqian.db.LocalUserNote;
+
 import java.util.List;
 
 /**
@@ -8,7 +10,9 @@ import java.util.List;
 
 public interface GetFindData<T> {
     void returnFindData(List<T> findData,Boolean isSuccess);
-    void deletDataResult(Boolean isSuccess);
+    void deletDataResult(List<LocalUserNote> deletOkItem);
+    void creatNotesResult(List<LocalUserNote> creatSuccessItems);
+    void updateNotesResult(List<LocalUserNote> updateSuccessItems);
     void creatDataResult(Boolean isSuccess);
     void upDataResult(Boolean isSuccess);
 }

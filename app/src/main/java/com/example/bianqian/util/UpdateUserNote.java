@@ -6,6 +6,7 @@ import android.widget.Toast;
 
 import com.example.bianqian.bmobbasic.User;
 import com.example.bianqian.bmobbasic.UserNote;
+import com.example.bianqian.db.LocalUserNote;
 import com.example.bianqian.impl.GetFindData;
 
 import java.text.ParseException;
@@ -66,14 +67,74 @@ public class UpdateUserNote {
         });
     }
 
-    public static void deletNote(List<String> noteIds, final Context context, final GetFindData<UserNote> deletResult){
-        List<BmobObject> notes = new ArrayList<BmobObject>();
-        for (String id : noteIds){
-            UserNote note = new UserNote();
-            note.setObjectId(id);
-            notes.add(note);
+    public static void creatNotes(final List<LocalUserNote> notes,final GetFindData<UserNote> creatNotesResult){
+        final List<BmobObject> creatNotes = new ArrayList<BmobObject>();
+        final List<LocalUserNote> creatSuccessItems = new ArrayList<LocalUserNote>();
+        for (LocalUserNote note : notes){
+            UserNote creatNote = new UserNote();
+            creatNote.setUser(note.getUser());
+            creatNote.setNote(note.getNote());
+            creatNote.setUpdateDate(note.getUpdateDate());
+            creatNote.setMoodColor(note.getMoonColor());
+            creatNotes.add(creatNote);
         }
-        new BmobBatch().deleteBatch(notes).doBatch(new QueryListListener<BatchResult>() {
+
+        new BmobBatch().insertBatch(creatNotes).doBatch(new QueryListListener<BatchResult>() {
+            @Override
+            public void done(List<BatchResult> list, BmobException e) {
+                if(e == null){
+                    for (int i = 0;i < list.size();i ++){
+                        BatchResult result = list.get(i);
+                        BmobException ex = result.getError();
+                        if(ex == null){
+                            LocalUserNote successItem = notes.get(i);
+                            successItem.setNoteId(result.getObjectId());
+                            creatSuccessItems.add(successItem);
+                        }
+                    }
+                }
+            }
+        });
+            creatNotesResult.creatNotesResult(creatSuccessItems);
+    }
+
+    public static void updateNotes(final List<LocalUserNote> notes,final GetFindData<UserNote> updateNotesResult){
+        final List<BmobObject> updateNotes = new ArrayList<BmobObject>();
+        final List<LocalUserNote> updateSuccessItems = new ArrayList<LocalUserNote>();
+        for (LocalUserNote note : notes){
+            UserNote updateNote = new UserNote();
+            updateNote.setObjectId(note.getNoteId());
+            updateNote.setMoodColor(note.getMoonColor());
+            updateNote.setNote(note.getNote());
+            updateNote.setUpdateDate(note.getUpdateDate());
+            updateNotes.add(updateNote);
+        }
+        new BmobBatch().updateBatch(updateNotes).doBatch(new QueryListListener<BatchResult>() {
+            @Override
+            public void done(List<BatchResult> list, BmobException e) {
+                if(e == null){
+                    for (int i = 0;i < list.size();i++){
+                        BatchResult result = list.get(i);
+                        BmobException ex = result.getError();
+                        if(ex == null){
+                            updateSuccessItems.add(notes.get(i));
+                        }
+                    }
+                }
+            }
+        });
+        updateNotesResult.updateNotesResult(updateSuccessItems);
+    }
+
+    public static void deletNote(final List<LocalUserNote> notes, final GetFindData<UserNote> deletResult){
+        final List<BmobObject> deletNotes = new ArrayList<BmobObject>();
+        final List<LocalUserNote> deletSuccessItems = new ArrayList<LocalUserNote>();
+        for (LocalUserNote note : notes){
+            UserNote deletNote = new UserNote();
+            deletNote.setObjectId(note.getNoteId());
+            deletNotes.add(deletNote);
+        }
+        new BmobBatch().deleteBatch(deletNotes).doBatch(new QueryListListener<BatchResult>() {
             @Override
             public void done(List<BatchResult> list, BmobException e) {
                 if(e==null){
@@ -81,17 +142,13 @@ public class UpdateUserNote {
                         BatchResult result = list.get(i);
                         BmobException ex =result.getError();
                         if(ex==null){
-                            deletResult.deletDataResult(true);
-                        }else{
-                            showToast("第"+i+"个数据批量删除失败：" + "失败原因：" + ShowError.showError(ex),context);
+                            deletSuccessItems.add(notes.get(i));
                         }
                     }
-                }else{
-                    showToast(ShowError.showError(e),context);
-                    Log.d("error",ShowError.showError(e));
                 }
             }
         });
+        deletResult.deletDataResult(deletSuccessItems);
     }
 
     public static void getAuthorNote(User user, final Context context, final GetFindData<UserNote> findData){

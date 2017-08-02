@@ -24,8 +24,11 @@ import com.example.bianqian.adapter.MyAdapter;
 import com.example.bianqian.adapter.MyViewHolder;
 import com.example.bianqian.bmobbasic.User;
 import com.example.bianqian.bmobbasic.UserNote;
+import com.example.bianqian.db.LocalUserNote;
 import com.example.bianqian.impl.GetFindData;
 import com.example.bianqian.util.UpdateUserNote;
+
+import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,13 +72,16 @@ public class MoodNote extends Fragment {
 
     private List<AdapterDateList> data = new ArrayList<>();
 
-    private List<UserNote> allData;
+    private List<LocalUserNote> localUserNotes = new ArrayList<>();
+    //private List<UserNote> allData;
 
     private MyAdapter<AdapterDateList> adapter;
 
     private MultiItemTypeSupport<AdapterDateList> multiItemTypeSupport;
 
     private GetFindData<UserNote> changeData;
+
+    private boolean isUpdateFromInternet = true;
 
     @Nullable
     @Override
@@ -87,6 +93,13 @@ public class MoodNote extends Fragment {
         addNewNoteButton = (FloatingActionButton) view.findViewById(R.id.floating_newitem_button);
         swipeRefreshNote = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_note);
         swipeRefreshNote.setColorSchemeResources(R.color.text_background_purple,R.color.colorAccent,R.color.text_background_pink,R.color.text_background_red);
+
+        if(DataSupport.findAll(LocalUserNote.class) == null || DataSupport.findAll(LocalUserNote.class).size() == 0){
+            isUpdateFromInternet = true;
+        }else {
+            isUpdateFromInternet = false;
+        }
+
         dialog = new ProgressDialog(getActivity());
         swipeRefreshNote.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -130,18 +143,38 @@ public class MoodNote extends Fragment {
             @Override
             public void returnFindData(List<UserNote> findData,Boolean isSuccess) {
                 if(isSuccess){
-                allData = findData;
-                //Log.d("1","3");
-                notifyDataSetChanged(mood,allData);
+                    for (int i = 0;i < findData.size();i ++){
+                       LocalUserNote userNote = new LocalUserNote();
+                        userNote.setNoteId(findData.get(i).getObjectId());
+                        userNote.setUpdateDate(findData.get(i).getUpdateDate());
+                        userNote.setNote(findData.get(i).getNote());
+                        userNote.setUser(findData.get(i).getUser());
+                        userNote.setMoonColor(findData.get(i).getMoodColor());
+                        userNote.setUpdateType("finish");
+                        userNote.save();
+                    }
+                    isUpdateFromInternet = false;
+                updateData();
                 }else {
                     swipeRefreshNote.setRefreshing(false);
+                    isUpdateFromInternet = true;
                 }
             }
 
             @Override
-            public void deletDataResult(Boolean isSuccess) {
+            public void deletDataResult(List<LocalUserNote> deletSuccessItem) {
                 //删除完数据后，获取删除成功的项目并更新
                 intialize();
+
+            }
+
+            @Override
+            public void creatNotesResult(List<LocalUserNote> creatSuccessItems) {
+
+            }
+
+            @Override
+            public void updateNotesResult(List<LocalUserNote> updateSuccessItems) {
 
             }
 
@@ -193,7 +226,7 @@ public class MoodNote extends Fragment {
             public void onClick(View v) {
                 adapter.clearSelectItems();
                 adapter.setClickLong(false);
-                notifyDataSetChanged(mood,allData);
+                notifyDataSetChanged(mood,localUserNotes);
                 cancleDeletLayout.setVisibility(View.GONE);
                 addNewNoteButton.setVisibility(View.VISIBLE);
             }
@@ -205,13 +238,13 @@ public class MoodNote extends Fragment {
                 dialog.setMessage("删除中…");
                 dialog.show();
                 //dialog = ProgressDialog.show(getActivity(), null, "删除中…", true, false);
-                List<String> noteIds = new ArrayList<String>();
+                List<LocalUserNote> deletNotes = new ArrayList<LocalUserNote>();
                 List<Integer> position = adapter.getSelectItems();
                 for(int i : position){
-                    noteIds.add(data.get(i).getUserNote().getObjectId());
+                    deletNotes.add(data.get(i).getLocalUserNote());
                 }
 
-                UpdateUserNote.deletNote(noteIds,getContext(),changeData);
+                UpdateUserNote.deletNote(localUserNotes,changeData);
                 adapter.clearSelectItems();
                 adapter.setClickLong(false);
                 cancleDeletLayout.setVisibility(View.GONE);
@@ -233,12 +266,24 @@ public class MoodNote extends Fragment {
 
     private void intialize(){
         //Log.d("1","2");
+        if(isUpdateFromInternet){
         UpdateUserNote.getAuthorNote(user,getContext(),changeData);
+        }else {
+           updateData();
+        }
+    }
+
+    private void updateData(){
+        List<LocalUserNote> findUserNote = DataSupport.findAll(LocalUserNote.class);
+        for (LocalUserNote userNote : findUserNote){
+            localUserNotes.add(userNote);
+        }
+            notifyDataSetChanged(mood,localUserNotes);
     }
 
     public void intializeRecycler(final MyViewHolder holder, final AdapterDateList adapterDate, final boolean isClickLong, int positoin){
         int circleColor,backgroundColor,textColor;
-        switch(adapterDate.getUserNote().getMoodColor()){
+        switch(adapterDate.getLocalUserNote().getMoonColor()){
             case  "red" : circleColor = R.drawable.red_circle;
                 backgroundColor = R.color.text_background_red;
                 textColor = R.color.text_red;
@@ -283,8 +328,8 @@ public class MoodNote extends Fragment {
         //holder.setCardBackGround(R.id.note_card_color,backgroundColor);
         holder.setBackGround(R.id.note_text,backgroundColor);
         holder.setTextColor(R.id.note_text,textColor);
-        holder.setText(R.id.note_text,adapterDate.getUserNote().getNote());
-        holder.setText(R.id.note_item_date,adapterDate.getUserNote().getUpdatedAt());
+        holder.setText(R.id.note_text,adapterDate.getLocalUserNote().getNote());
+        holder.setText(R.id.note_item_date,adapterDate.getLocalUserNote().getUpdateDate().toString());
 
         if(isClickLong){
             holder.setVisiblity(R.id.note_checkbox);
@@ -301,10 +346,10 @@ public class MoodNote extends Fragment {
                     //傳入數據，進入編輯頁面
                         Intent intent = new Intent(getContext(), EditingTextActivity.class);
                         intent.putExtra(EditingTextActivity.TYPE,EditingTextActivity.CHANGENOTE);
-                        intent.putExtra(EditingTextActivity.NOTEID,adapterDate.getUserNote().getObjectId());
-                        intent.putExtra(EditingTextActivity.MOOD,adapterDate.getUserNote().getMoodColor());
-                        intent.putExtra(EditingTextActivity.DATE,adapterDate.getUserNote().getUpdatedAt());
-                        intent.putExtra(EditingTextActivity.TEXT,adapterDate.getUserNote().getNote());
+                        intent.putExtra(EditingTextActivity.NOTEID,adapterDate.getLocalUserNote().getNoteId());
+                        intent.putExtra(EditingTextActivity.MOOD,adapterDate.getLocalUserNote().getMoonColor());
+                        intent.putExtra(EditingTextActivity.DATE,adapterDate.getLocalUserNote().getUpdateDate().toString());
+                        intent.putExtra(EditingTextActivity.TEXT,adapterDate.getLocalUserNote().getNote());
                         getContext().startActivity(intent);
                     }
                 }
@@ -315,7 +360,7 @@ public class MoodNote extends Fragment {
                     adapter.setClickLong(true);
                     cancleDeletLayout.setVisibility(View.VISIBLE);
                     addNewNoteButton.setVisibility(View.GONE);
-                    notifyDataSetChanged(mood,allData);
+                    notifyDataSetChanged(mood,localUserNotes);
                     return true;
                 }
             });
@@ -334,19 +379,19 @@ public class MoodNote extends Fragment {
 
     }
 
-    private void notifyDataSetChanged(String mood,List<UserNote> alldata){
+    private void notifyDataSetChanged(String mood,List<LocalUserNote> alldata){
         //Log.d("1","4");
         data.clear();
         String date = "2050-12-12 24:59:59";
         for(AdapterDateList i:getListWithMood(mood,alldata)){
-            if(i.getUserNote().getUpdatedAt().split("-")[0].equals(date.split("-")[0])&&i.getUserNote().getUpdatedAt().split("-")[1].equals(date.split("-")[1])){
+            if(i.getLocalUserNote().getUpdateDate().toString().split("-")[0].equals(date.split("-")[0])&&i.getLocalUserNote().getUpdateDate().toString().split("-")[1].equals(date.split("-")[1])){
                i.setDataTile(false);
-                i.setDate(i.getUserNote().getUpdatedAt());
+                i.setDate(i.getLocalUserNote().getUpdateDate().toString());
                 data.add(i);
             }else {
-                date = i.getUserNote().getUpdatedAt();
+                date = i.getLocalUserNote().getUpdateDate().toString();
                 i.setDataTile(true);
-                i.setDate(i.getUserNote().getUpdatedAt());
+                i.setDate(i.getLocalUserNote().getUpdateDate().toString());
                 data.add(i);
             }
         }
@@ -355,76 +400,76 @@ public class MoodNote extends Fragment {
         dialog.dismiss();
     }
 
-    private List<AdapterDateList> getListWithMood(String mood,List<UserNote> alldata){
+    private List<AdapterDateList> getListWithMood(String mood,List<LocalUserNote> alldata){
         List<AdapterDateList> adapterDateLists = new ArrayList<>();
         switch (mood){
-            case RED: for (UserNote i:alldata){
-                if(i.getMoodColor().equals("red")){
+            case RED: for (LocalUserNote i:alldata){
+                if(i.getMoonColor().equals("red")){
                     AdapterDateList adapterDateList = new AdapterDateList();
-                    adapterDateList.setUserNote(i);
+                    adapterDateList.setLocalUserNote(i);
                     adapterDateLists.add(adapterDateList);
                 }
             }
                 return adapterDateLists;
 
-            case GREEN : for (UserNote i:alldata){
-                if(i.getMoodColor().equals("green")){
+            case GREEN : for (LocalUserNote i:alldata){
+                if(i.getMoonColor().equals("green")){
                     AdapterDateList adapterDateList = new AdapterDateList();
-                    adapterDateList.setUserNote(i);
+                    adapterDateList.setLocalUserNote(i);
                     adapterDateLists.add(adapterDateList);
                 }
             }
                 return adapterDateLists;
 
-            case BLUE : for (UserNote i:alldata){
-                if(i.getMoodColor().equals("blue")){
+            case BLUE : for (LocalUserNote i:alldata){
+                if(i.getMoonColor().equals("blue")){
                     AdapterDateList adapterDateList = new AdapterDateList();
-                    adapterDateList.setUserNote(i);
+                    adapterDateList.setLocalUserNote(i);
                     adapterDateLists.add(adapterDateList);
                 }
             }
                 return adapterDateLists;
 
-            case YELLOW : for (UserNote i:alldata){
-                if(i.getMoodColor().equals("yellow")){
+            case YELLOW : for (LocalUserNote i:alldata){
+                if(i.getMoonColor().equals("yellow")){
                     AdapterDateList adapterDateList = new AdapterDateList();
-                    adapterDateList.setUserNote(i);
+                    adapterDateList.setLocalUserNote(i);
                     adapterDateLists.add(adapterDateList);
                 }
             }
                 return adapterDateLists;
 
-            case PURPLE :  for (UserNote i:alldata){
-                if(i.getMoodColor().equals("purple")){
+            case PURPLE :  for (LocalUserNote i:alldata){
+                if(i.getMoonColor().equals("purple")){
                     AdapterDateList adapterDateList = new AdapterDateList();
-                    adapterDateList.setUserNote(i);
+                    adapterDateList.setLocalUserNote(i);
                     adapterDateLists.add(adapterDateList);
                 }
             }
                 return adapterDateLists;
 
-            case PINK : for (UserNote i:alldata){
-                if(i.getMoodColor().equals("pink")){
+            case PINK : for (LocalUserNote i:alldata){
+                if(i.getMoonColor().equals("pink")){
                     AdapterDateList adapterDateList = new AdapterDateList();
-                    adapterDateList.setUserNote(i);
+                    adapterDateList.setLocalUserNote(i);
                     adapterDateLists.add(adapterDateList);
                 }
             }
                 return adapterDateLists;
 
-            case GRAY : for (UserNote i:alldata){
-                if(i.getMoodColor().equals("gray")){
+            case GRAY : for (LocalUserNote i:alldata){
+                if(i.getMoonColor().equals("gray")){
                     AdapterDateList adapterDateList = new AdapterDateList();
-                    adapterDateList.setUserNote(i);
+                    adapterDateList.setLocalUserNote(i);
                     adapterDateLists.add(adapterDateList);
                 }
             }
                 return adapterDateLists;
 
             default:
-                for(UserNote i:alldata){
+                for(LocalUserNote i:alldata){
                     AdapterDateList adapterDateList = new AdapterDateList();
-                    adapterDateList.setUserNote(i);
+                    adapterDateList.setLocalUserNote(i);
                     adapterDateLists.add(adapterDateList);
                 }
                 return adapterDateLists;
@@ -433,7 +478,7 @@ public class MoodNote extends Fragment {
 
     public void updateWithMood(String mood){
         this.mood = mood;
-        notifyDataSetChanged(this.mood,allData);
+        notifyDataSetChanged(this.mood,localUserNotes);
     }
 
     @Override

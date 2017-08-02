@@ -1,6 +1,6 @@
 package com.example.bianqian.adapter;
 
-import com.example.bianqian.bmobbasic.UserNote;
+import com.example.bianqian.db.LocalUserNote;
 
 /**
  * Created by 刘通 on 2017/7/6.
@@ -8,11 +8,19 @@ import com.example.bianqian.bmobbasic.UserNote;
 
 public class AdapterDateList {
 
-    private UserNote userNote;
+    private LocalUserNote localUserNote;
 
     private Boolean dataTile;
 
     private String date;
+
+    public LocalUserNote getLocalUserNote() {
+        return localUserNote;
+    }
+
+    public void setLocalUserNote(LocalUserNote localUserNote) {
+        this.localUserNote = localUserNote;
+    }
 
     public String getDate() {
         return date;
@@ -30,11 +38,4 @@ public class AdapterDateList {
         this.dataTile = dataTile;
     }
 
-    public UserNote getUserNote() {
-        return userNote;
-    }
-
-    public void setUserNote(UserNote userNote) {
-        this.userNote = userNote;
-    }
 }

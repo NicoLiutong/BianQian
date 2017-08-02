@@ -1,14 +1,16 @@
 package com.example.bianqian.db;
 
+import com.example.bianqian.bmobbasic.User;
+
 import org.litepal.crud.DataSupport;
 
 import java.util.Date;
 
 /**
- * Created by 刘通 on 2017/8/1.
+ * Created by 刘通 on 2017/8/2.
  */
 
-public class UserNote extends DataSupport {
+public class LocalUserNote extends DataSupport {
 
     private String noteId;
 
@@ -17,6 +19,26 @@ public class UserNote extends DataSupport {
     private Date updateDate;
 
     private String updateType;
+
+    private User user;
+
+    private String moonColor;
+
+    public String getMoonColor() {
+        return moonColor;
+    }
+
+    public void setMoonColor(String moonColor) {
+        this.moonColor = moonColor;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     public String getNoteId() {
         return noteId;

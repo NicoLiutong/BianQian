@@ -1,5 +1,7 @@
 package com.example.bianqian.bmobbasic;
 
+import java.util.Date;
+
 import cn.bmob.v3.BmobObject;
 
 /**
@@ -13,6 +15,17 @@ public class UserNote extends BmobObject {
     private String note;
 
     private String moodColor;
+
+
+    private Date updateDate;
+
+    public Date getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
+    }
 
     public String getNote() {
         return note;
