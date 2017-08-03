@@ -16,7 +16,6 @@ public class UserNote extends BmobObject {
 
     private String moodColor;
 
-
     private Date updateDate;
 
     public Date getUpdateDate() {

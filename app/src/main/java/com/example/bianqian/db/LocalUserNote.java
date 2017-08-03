@@ -12,6 +12,8 @@ import java.util.Date;
 
 public class LocalUserNote extends DataSupport {
 
+    private long id;
+
     private String noteId;
 
     private String note;
@@ -23,6 +25,10 @@ public class LocalUserNote extends DataSupport {
     private User user;
 
     private String moonColor;
+
+    public long getId() {
+        return id;
+    }
 
     public String getMoonColor() {
         return moonColor;

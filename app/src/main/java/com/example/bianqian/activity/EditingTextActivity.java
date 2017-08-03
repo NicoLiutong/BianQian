@@ -14,11 +14,9 @@ import com.example.bianqian.bmobbasic.User;
 import com.example.bianqian.bmobbasic.UserNote;
 import com.example.bianqian.db.LocalUserNote;
 import com.example.bianqian.impl.GetFindData;
-import com.example.bianqian.util.UpdateUserNote;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 import cn.bmob.v3.BmobUser;
 
@@ -37,6 +35,11 @@ public class EditingTextActivity extends BasicActivity implements View.OnClickLi
     public static final String TYPE = "type";
     //文本id
     public static final String NOTEID = "noteId";
+
+    public static final String ID = "id";
+
+    private String times;
+
     //防止多次点击完成
     private boolean isComplete;
     private Button completeButton, redButton, purpleButton, pinkButton, yellowButton, greenButton, blueButton, grayButton;
@@ -54,6 +57,7 @@ public class EditingTextActivity extends BasicActivity implements View.OnClickLi
     private String editType;
     private User user;
     private String noteId;
+    private long id;
 
     private GetFindData<UserNote> getResult;
 
@@ -102,10 +106,11 @@ public class EditingTextActivity extends BasicActivity implements View.OnClickLi
         text = intent.getStringExtra(TEXT);
         moodColor = intent.getStringExtra(MOOD);
         noteId = intent.getStringExtra(NOTEID);
+        id = intent.getLongExtra(ID,1L);
 
         isComplete = false;
         //数据操作的回调
-        getResult = new GetFindData<UserNote>() {
+        /*getResult = new GetFindData<UserNote>() {
             @Override
             public void returnFindData(List<UserNote> findData,Boolean isSuccess) {    }
 
@@ -141,7 +146,7 @@ public class EditingTextActivity extends BasicActivity implements View.OnClickLi
                     isComplete = false;
                 }
             }
-        };
+        };*/
         //如果是创建数据调用CreateNote方法
         if(editType.equals(CREATNOTE)){
             intilizeCreatNote(moodColor);
@@ -192,20 +197,38 @@ public class EditingTextActivity extends BasicActivity implements View.OnClickLi
                 //完成键先设置isComplete为true防止多次点击，然后根据类型分别创建或更新数据
                 if (!isComplete) {
                     isComplete = true;
-                    UserNote userNote = new UserNote();
+                    /*UserNote userNote = new UserNote();
                     userNote.setUser(user);
                     userNote.setMoodColor(moodColor);
+                    userNote.setNote(editText.getText().toString());*/
+
+                    LocalUserNote userNote = new LocalUserNote();
+                    userNote.setUser(user);
+                    userNote.setMoonColor(moodColor);
                     userNote.setNote(editText.getText().toString());
+                    userNote.setUpdateDate(new Date(System.currentTimeMillis()));
 
                     if (editType.equals(CREATNOTE)) {
                         //存储新建的
-                        UpdateUserNote.creatNewNote(userNote, this, getResult);
+                        //UpdateUserNote.creatNewNote(userNote, this, getResult);
+                        userNote.setNoteId("");
+                        userNote.setUpdateType("creat");
+                        userNote.save();
                     }
 
                     if (editType.equals(CHANGENOTE)) {
                         //更新后台数据
-                        UpdateUserNote.updateNote(userNote, noteId, this, getResult);
+                        //UpdateUserNote.updateNote(userNote, noteId, this, getResult);
+                        if(noteId.equals("")){
+                            userNote.setNoteId("");
+                            userNote.setUpdateType("creat");
+
+                        }else{
+                            userNote.setUpdateType("update");
+                        }
+                        userNote.update(id);
                     }
+                    finish();
                     break;
                 }
         }
@@ -268,7 +291,7 @@ public class EditingTextActivity extends BasicActivity implements View.OnClickLi
     private void intilizeCreatNote(String color){
         //从本地获得
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String times = format.format(new Date(System.currentTimeMillis()));
+        times = format.format(new Date(System.currentTimeMillis()));
         textDate.setText(times);
         //获取服务器的时间
         /*Bmob.getServerTime(new QueryListener<Long>() {

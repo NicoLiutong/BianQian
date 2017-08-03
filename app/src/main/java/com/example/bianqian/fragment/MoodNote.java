@@ -30,10 +30,13 @@ import com.example.bianqian.util.UpdateUserNote;
 
 import org.litepal.crud.DataSupport;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import cn.bmob.v3.BmobUser;
+
+import static org.litepal.crud.DataSupport.findAll;
 
 /**
  * Created by 刘通 on 2017/6/15.
@@ -53,6 +56,8 @@ public class MoodNote extends Fragment {
     private static final String PURPLE = "purple";
     private static final String PINK = "pink";
     private static final String GRAY = "gray";
+
+    private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     private String mood = ALL;
 
@@ -94,7 +99,7 @@ public class MoodNote extends Fragment {
         swipeRefreshNote = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_note);
         swipeRefreshNote.setColorSchemeResources(R.color.text_background_purple,R.color.colorAccent,R.color.text_background_pink,R.color.text_background_red);
 
-        if(DataSupport.findAll(LocalUserNote.class) == null || DataSupport.findAll(LocalUserNote.class).size() == 0){
+        if(findAll(LocalUserNote.class) == null || findAll(LocalUserNote.class).size() == 0){
             isUpdateFromInternet = true;
         }else {
             isUpdateFromInternet = false;
@@ -163,8 +168,6 @@ public class MoodNote extends Fragment {
 
             @Override
             public void deletDataResult(List<LocalUserNote> deletSuccessItem) {
-                //删除完数据后，获取删除成功的项目并更新
-                intialize();
 
             }
 
@@ -244,7 +247,13 @@ public class MoodNote extends Fragment {
                     deletNotes.add(data.get(i).getLocalUserNote());
                 }
 
-                UpdateUserNote.deletNote(localUserNotes,changeData);
+                //UpdateUserNote.deletNote(localUserNotes,changeData);
+                for(int i = 0;i < deletNotes.size(); i ++){
+                    LocalUserNote updateUserNote = new LocalUserNote();
+                    updateUserNote.setUpdateType("delet");
+                    updateUserNote.update(deletNotes.get(i).getId());
+                }
+                updateData();
                 adapter.clearSelectItems();
                 adapter.setClickLong(false);
                 cancleDeletLayout.setVisibility(View.GONE);
@@ -274,9 +283,12 @@ public class MoodNote extends Fragment {
     }
 
     private void updateData(){
-        List<LocalUserNote> findUserNote = DataSupport.findAll(LocalUserNote.class);
+        localUserNotes.clear();
+        List<LocalUserNote> findUserNote = DataSupport.order("updateDate desc").find(LocalUserNote.class);
         for (LocalUserNote userNote : findUserNote){
-            localUserNotes.add(userNote);
+            if(!userNote.getUpdateType().equals("delet")){
+                localUserNotes.add(userNote);
+            }
         }
             notifyDataSetChanged(mood,localUserNotes);
     }
@@ -329,7 +341,7 @@ public class MoodNote extends Fragment {
         holder.setBackGround(R.id.note_text,backgroundColor);
         holder.setTextColor(R.id.note_text,textColor);
         holder.setText(R.id.note_text,adapterDate.getLocalUserNote().getNote());
-        holder.setText(R.id.note_item_date,adapterDate.getLocalUserNote().getUpdateDate().toString());
+        holder.setText(R.id.note_item_date,format.format(adapterDate.getLocalUserNote().getUpdateDate()));
 
         if(isClickLong){
             holder.setVisiblity(R.id.note_checkbox);
@@ -348,8 +360,9 @@ public class MoodNote extends Fragment {
                         intent.putExtra(EditingTextActivity.TYPE,EditingTextActivity.CHANGENOTE);
                         intent.putExtra(EditingTextActivity.NOTEID,adapterDate.getLocalUserNote().getNoteId());
                         intent.putExtra(EditingTextActivity.MOOD,adapterDate.getLocalUserNote().getMoonColor());
-                        intent.putExtra(EditingTextActivity.DATE,adapterDate.getLocalUserNote().getUpdateDate().toString());
+                        intent.putExtra(EditingTextActivity.DATE,format.format(adapterDate.getLocalUserNote().getUpdateDate()));
                         intent.putExtra(EditingTextActivity.TEXT,adapterDate.getLocalUserNote().getNote());
+                        intent.putExtra(EditingTextActivity.ID,adapterDate.getLocalUserNote().getId());
                         getContext().startActivity(intent);
                     }
                 }
@@ -384,14 +397,15 @@ public class MoodNote extends Fragment {
         data.clear();
         String date = "2050-12-12 24:59:59";
         for(AdapterDateList i:getListWithMood(mood,alldata)){
-            if(i.getLocalUserNote().getUpdateDate().toString().split("-")[0].equals(date.split("-")[0])&&i.getLocalUserNote().getUpdateDate().toString().split("-")[1].equals(date.split("-")[1])){
+             String times = format.format(i.getLocalUserNote().getUpdateDate());
+            if(times.split("-")[0].equals(date.split("-")[0])&&times.split("-")[1].equals(date.split("-")[1])){
                i.setDataTile(false);
-                i.setDate(i.getLocalUserNote().getUpdateDate().toString());
+                i.setDate(times);
                 data.add(i);
             }else {
-                date = i.getLocalUserNote().getUpdateDate().toString();
+                date = times;
                 i.setDataTile(true);
-                i.setDate(i.getLocalUserNote().getUpdateDate().toString());
+                i.setDate(times);
                 data.add(i);
             }
         }
