@@ -22,7 +22,7 @@ public class LocalUserNote extends DataSupport {
 
     private String updateType;
 
-    private User user;
+    private String user;
 
     private String moonColor;
 
@@ -38,11 +38,11 @@ public class LocalUserNote extends DataSupport {
         this.moonColor = moonColor;
     }
 
-    public User getUser() {
+    public String getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(String user) {
         this.user = user;
     }
 
