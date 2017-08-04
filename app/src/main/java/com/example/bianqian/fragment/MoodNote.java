@@ -153,7 +153,7 @@ public class MoodNote extends Fragment {
                         userNote.setNoteId(findData.get(i).getObjectId());
                         userNote.setUpdateDate(findData.get(i).getUpdateDate());
                         userNote.setNote(findData.get(i).getNote());
-                        userNote.setUser(findData.get(i).getUser());
+                        userNote.setUser(findData.get(i).getUser().getObjectId());
                         userNote.setMoonColor(findData.get(i).getMoodColor());
                         userNote.setUpdateType("finish");
                         userNote.save();
