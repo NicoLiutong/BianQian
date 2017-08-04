@@ -67,12 +67,12 @@ public class UpdateUserNote {
         });
     }
 
-    public static void creatNotes(final List<LocalUserNote> notes,final GetFindData<UserNote> creatNotesResult){
+    public static void creatNotes(final List<LocalUserNote> notes,final User user, final GetFindData<UserNote> creatNotesResult){
         final List<BmobObject> creatNotes = new ArrayList<BmobObject>();
         final List<LocalUserNote> creatSuccessItems = new ArrayList<LocalUserNote>();
         for (LocalUserNote note : notes){
             UserNote creatNote = new UserNote();
-            creatNote.setUser(note.getUser());
+            creatNote.setUser(user);
             creatNote.setNote(note.getNote());
             creatNote.setUpdateDate(note.getUpdateDate());
             creatNote.setMoodColor(note.getMoonColor());
