@@ -154,7 +154,7 @@ public class UpdateUserNote {
     public static void getAuthorNote(User user, final Context context, final GetFindData<UserNote> findData){
         BmobQuery<UserNote> query = new BmobQuery<UserNote>();
         query.addWhereEqualTo("user",user);
-        query.order("-updateDate");
+        query.order("-updatedAt");
         query.setLimit(1000);
         query.findObjects(new FindListener<UserNote>() {
             @Override
