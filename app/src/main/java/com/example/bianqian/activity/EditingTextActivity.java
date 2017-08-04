@@ -203,7 +203,7 @@ public class EditingTextActivity extends BasicActivity implements View.OnClickLi
                     userNote.setNote(editText.getText().toString());*/
 
                     LocalUserNote userNote = new LocalUserNote();
-                    userNote.setUser(user);
+                    userNote.setUser(user.getObjectId());
                     userNote.setMoonColor(moodColor);
                     userNote.setNote(editText.getText().toString());
                     userNote.setUpdateDate(new Date(System.currentTimeMillis()));
