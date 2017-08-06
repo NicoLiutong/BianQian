@@ -151,23 +151,32 @@ public class UpdateUserNote {
         deletResult.deletDataResult(deletSuccessItems);
     }
 
-    public static void getAuthorNote(User user, final Context context, final GetFindData<UserNote> findData){
-        BmobQuery<UserNote> query = new BmobQuery<UserNote>();
-        query.addWhereEqualTo("user",user);
-        query.order("-updatedAt");
-        query.setLimit(1000);
-        query.findObjects(new FindListener<UserNote>() {
+    public static void getAuthorNote(final User user, final Context context, final GetFindData<UserNote> findData){
+        /*Thread thread = new Thread(new Runnable() {
             @Override
-            public void done(List<UserNote> list, BmobException e) {
-              if(e == null){
-                  findData.returnFindData(list,true);
-              } else {
-                  showToast(ShowError.showError(e),context);
-                  findData.returnFindData(list,false);
-                  Log.d("error",ShowError.showError(e));
-              }
-            }
+            public void run() {*/
+                BmobQuery<UserNote> query = new BmobQuery<UserNote>();
+                query.addWhereEqualTo("user",user);
+                query.order("-updatedAt");
+                query.setLimit(1000);
+                query.findObjects(new FindListener<UserNote>() {
+                    @Override
+                    public void done(List<UserNote> list, BmobException e) {
+                        if(e == null){
+
+                            findData.returnFindData(list,true);
+                        } else {
+                            //showToast(ShowError.showError(e),context);
+                            Log.d("3","3.1");
+                            Log.d("error",ShowError.showError(e));
+                            findData.returnFindData(list,false);
+                        }
+                    }
+                });
+        /*    }
         });
+        thread.start();*/
+
     }
 
     public static void getAuthorNoteWithDate(User user, String date, final Context context, final GetFindData<UserNote> findData){

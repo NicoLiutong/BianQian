@@ -42,4 +42,13 @@ public class AllSharedPreference {
     public boolean getAutomaticLogin(){
         return preferences.getBoolean("antomaticLogin",false);
     }
+
+    public void setShareAddress(String shareAddress){
+        editor.putString("shareAddress",shareAddress);
+        editor.apply();
+    }
+
+    public String getShareAddress(){
+        return preferences.getString("shareAddress","");
+    }
 }

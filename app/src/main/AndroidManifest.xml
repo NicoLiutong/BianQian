@@ -29,14 +29,15 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <meta-data
-            android:name="BMOB_CHANNEL"
-            android:value=""/>
-
+    <!--
         <activity
             android:name="cn.bmob.v3.update.UpdateDialogActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar">
+            <meta-data
+                android:value="1" android:name="BMOB_CHANNEL"/>
         </activity>
+
+        -->
         <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

@@ -1,7 +1,10 @@
 package com.example.bianqian.activity;
 
+import android.app.DownloadManager;
+import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
@@ -10,9 +13,13 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AlertDialog;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -22,17 +29,22 @@ import com.bumptech.glide.Glide;
 import com.example.bianqian.R;
 import com.example.bianqian.activity.userabout.LoginActivity;
 import com.example.bianqian.activity.userabout.UserMessageActivity;
+import com.example.bianqian.bmobbasic.MyAppVersion;
 import com.example.bianqian.bmobbasic.User;
 import com.example.bianqian.fragment.MoodNote;
+import com.example.bianqian.util.AllSharedPreference;
+import com.example.bianqian.util.GetAppVersionInformation;
 import com.example.bianqian.util.LevelUtils;
 
 import org.litepal.LitePal;
 
+import java.io.File;
+import java.util.List;
+
+import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
-import cn.bmob.v3.listener.BmobUpdateListener;
-import cn.bmob.v3.update.BmobUpdateAgent;
-import cn.bmob.v3.update.UpdateResponse;
-import cn.bmob.v3.update.UpdateStatus;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
 
 public class ApplicationMainActivity extends BasicActivity {
 
@@ -61,6 +73,9 @@ public class ApplicationMainActivity extends BasicActivity {
     private MoodNote fragment;
 
     private static final int EXIT_APPLICATION = 1;
+
+    private AllSharedPreference preference;
+
     @Override
     public void setContentView() {
         setContentView(R.layout.activity_application_main);
@@ -180,7 +195,7 @@ public class ApplicationMainActivity extends BasicActivity {
                         break;*/
                     case R.id.menu_update_application:
                         //设置版本更新监听
-                        BmobUpdateAgent.setUpdateListener(new BmobUpdateListener() {
+                        /*BmobUpdateAgent.setUpdateListener(new BmobUpdateListener() {
                             @Override
                             public void onUpdateReturned(int i, UpdateResponse updateResponse) {
                                 if(i == UpdateStatus.Yes){
@@ -190,13 +205,17 @@ public class ApplicationMainActivity extends BasicActivity {
                                 }
                             }
                         });
-                        BmobUpdateAgent.forceUpdate(ApplicationMainActivity.this);
+                        BmobUpdateAgent.forceUpdate(ApplicationMainActivity.this);*/
                         //ShowToast("更新");
+                        drawerLayout.closeDrawers();
+                        String s = checkUpdate();
+                        ShowToast(s);
                         break;
                     case R.id.menu_share:
+                        drawerLayout.closeDrawers();
                         Intent shareIntent = new Intent(Intent.ACTION_SEND);
                         shareIntent.setType("text/plain");
-                        shareIntent.putExtra(Intent.EXTRA_TEXT,"喵记  记录你每一天的快乐\nhttps://github.com/NicoLiutong/BianQian/blob/master/%E5%96%B5%E8%AE%B0.apk");
+                        shareIntent.putExtra(Intent.EXTRA_TEXT,"喵记  记录你每一天的快乐\n" + preference.getShareAddress());
                         shareIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(Intent.createChooser(shareIntent,"喵记"));
                         break;
@@ -211,9 +230,10 @@ public class ApplicationMainActivity extends BasicActivity {
         //BmobUpdateAgent.initAppVersion();
 
         // 更新软件版本
-        BmobUpdateAgent.setUpdateOnlyWifi(false);
-        BmobUpdateAgent.update(this);
-
+        /*BmobUpdateAgent.setUpdateOnlyWifi(false);
+        BmobUpdateAgent.update(this);*/
+        preference = new AllSharedPreference(this);
+        checkUpdate();
         navigationView.setItemIconTintList(null);
 
     }
@@ -272,4 +292,99 @@ public class ApplicationMainActivity extends BasicActivity {
             }
         }
     };
+
+    private String checkUpdate(){
+        //Log.d("1","1");
+        final String[] versionCodes = {null};
+        final String[] updateLogs = {null};
+        final boolean[] isupdate = {false};
+        final String[] url = {""};
+
+        final Handler mHandler = new Handler() {
+            //接收到消息后开始执行gohome（）
+            @Override
+            public void handleMessage(Message msg) {
+                switch (msg.what) {
+                    case 100:
+                        AlertDialog.Builder builder = new AlertDialog.Builder(ApplicationMainActivity.this,R.style.MyDialog);
+                        builder.setCancelable(true);
+                        View updateApp = View.inflate(ApplicationMainActivity.this,R.layout.update_app_version,null);
+                        builder.setView(updateApp);
+                        final AlertDialog dialog = builder.create();
+                        Window window = dialog.getWindow();
+                        window.setGravity(Gravity.BOTTOM);
+
+                        TextView versionCodeText =(TextView) updateApp.findViewById(R.id.update_app_versioncode);
+                        TextView updateLog = (TextView) updateApp.findViewById(R.id.update_app_log);
+                        Button download = (Button) updateApp.findViewById(R.id.update_app_download);
+
+                        versionCodeText.setText("版本号：" + versionCodes[0]);
+                        String updatelog = updateLogs[0].replace("+","\n");
+                        updateLog.setText(updatelog);
+
+                        download.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                //Log.d("1111",url[0]);
+                                String downloadUrl = url[0];
+                                DownloadManager.Request request = new DownloadManager.Request(Uri.parse(downloadUrl));
+                                request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+                                request.setTitle("喵记");
+                                request.setDescription("");
+                                File saveFile = new File(getExternalFilesDir(null) , "喵记.apk");
+                                request.setDestinationUri(Uri.fromFile(saveFile));
+                                DownloadManager manager = (DownloadManager) ApplicationMainActivity.this.getSystemService(Context.DOWNLOAD_SERVICE);
+
+                                // 将下载请求加入下载队列, 返回一个下载ID
+                                long downloadId = manager.enqueue(request);
+                                dialog.dismiss();
+                            }
+                        });
+                        dialog.show();
+                        break;
+                }
+            }
+        };
+
+        final int versionCode = GetAppVersionInformation.getVersionCode(this);
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+               // Log.d("2","2");
+                BmobQuery<MyAppVersion> query = new BmobQuery<MyAppVersion>();
+                query.clearCachedResult(MyAppVersion.class);
+                query.findObjects(new FindListener<MyAppVersion>() {
+                    @Override
+                    public void done(List<MyAppVersion> list, BmobException e) {
+                        if(e == null){
+                            //Log.d("3","3");
+                                //Log.d("4","4");
+                                versionCodes[0] = list.get(0).getVersion();
+                                updateLogs[0] = list.get(0).getUpdateLog();
+                                url[0] = list.get(0).getPath().getUrl();
+                                preference.setShareAddress(url[0]);
+                            if(versionCode != list.get(0).getVersionCode()){
+                                isupdate[0] = true;
+                                //Log.d("code",versionCodes[0] + "");
+                                //Log.d("log",updateLogs[0]);
+                               // Log.d("url",url[0]);
+                                Message msg = mHandler.obtainMessage();
+                                msg.what = 100;
+                                mHandler.sendEmptyMessage(100);
+                            }
+                        }else {
+                            isupdate[0] = false;
+                        }
+                    }
+                });
+            }
+        });
+        thread.start();
+        if(isupdate[0]){
+            return null;
+        }else {
+            return "没有更新";
+        }
+    }
 }

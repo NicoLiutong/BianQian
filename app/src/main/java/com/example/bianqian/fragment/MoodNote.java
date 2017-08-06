@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.example.bianqian.R;
 import com.example.bianqian.activity.EditingTextActivity;
@@ -26,7 +27,7 @@ import com.example.bianqian.bmobbasic.User;
 import com.example.bianqian.bmobbasic.UserNote;
 import com.example.bianqian.db.LocalUserNote;
 import com.example.bianqian.impl.GetFindData;
-import com.example.bianqian.util.UpdateUserNote;
+import com.example.bianqian.util.LogUtils;
 
 import org.litepal.crud.DataSupport;
 
@@ -35,8 +36,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.bmob.v3.BmobUser;
-
-import static org.litepal.crud.DataSupport.findAll;
 
 /**
  * Created by 刘通 on 2017/6/15.
@@ -67,6 +66,8 @@ public class MoodNote extends Fragment {
 
     private RecyclerView mainRecyclerView;
 
+    private TextView noNoteText;
+
     private Button cancleButton,deletButton;
 
     private FloatingActionButton addNewNoteButton;
@@ -86,24 +87,27 @@ public class MoodNote extends Fragment {
 
     private GetFindData<UserNote> changeData;
 
-    private boolean isUpdateFromInternet = true;
+    private boolean isUpdateFromInternet = false;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.main_activity_recycler,container,false);
         user = BmobUser.getCurrentUser(User.class);
+        noNoteText = (TextView) view.findViewById(R.id.noNoteText);
         mainRecyclerView = (RecyclerView) view.findViewById(R.id.main_recyclerview);
         cancleDeletLayout = (LinearLayout) view.findViewById(R.id.cancle_delet_layout);
         addNewNoteButton = (FloatingActionButton) view.findViewById(R.id.floating_newitem_button);
         swipeRefreshNote = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_note);
         swipeRefreshNote.setColorSchemeResources(R.color.text_background_purple,R.color.colorAccent,R.color.text_background_pink,R.color.text_background_red);
 
-        if(findAll(LocalUserNote.class) == null || findAll(LocalUserNote.class).size() == 0){
+        /*if(findAll(LocalUserNote.class) == null || findAll(LocalUserNote.class).size() == 0){
+            Log.d("isUpdateFromInternet","true");
             isUpdateFromInternet = true;
         }else {
+            Log.d("isUpdateFromInternet","false");
             isUpdateFromInternet = false;
-        }
+        }*/
 
         dialog = new ProgressDialog(getActivity());
         swipeRefreshNote.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -125,29 +129,27 @@ public class MoodNote extends Fragment {
             public int getLayoutId(int itenType) {
                 switch (itenType){
                     case TITLE : return R.layout.date_item;
-                    case NOTEITEM : return R.layout.item_note;
-                    default: return R.layout.item_nothing;
+                    default : return R.layout.item_note;
                 }
             }
 
 
             @Override
             public int getItemViewType(int position, AdapterDateList dataList) {
-                if(data.size() != 0){
-                    if(dataList.isDataTile()){
-                        return TITLE;
-                    }else {
-                        return NOTEITEM;
-                    }
+                if(data.size() != 0) {
+                if (dataList.isDataTile()) {
+                    return TITLE;
+                } else {
+                    return NOTEITEM;
                 }
-                    return NOLAYOUT;
-
+            }else return 1;
                 }
             };
-        changeData = new GetFindData<UserNote>() {
+        /*changeData = new GetFindData<UserNote>() {
             @Override
             public void returnFindData(List<UserNote> findData,Boolean isSuccess) {
                 if(isSuccess){
+                    //Log.d("3","3");
                     for (int i = 0;i < findData.size();i ++){
                        LocalUserNote userNote = new LocalUserNote();
                         userNote.setNoteId(findData.get(i).getObjectId());
@@ -158,9 +160,13 @@ public class MoodNote extends Fragment {
                         userNote.setUpdateType("finish");
                         userNote.save();
                     }
+
+                    LogUtils.d("firstGteFromInternet",DataSupport.findAll(LocalUserNote.class));
+
                     isUpdateFromInternet = false;
-                updateData();
+                //updateData();
                 }else {
+                    //Log.d("3","3.error");
                     swipeRefreshNote.setRefreshing(false);
                     isUpdateFromInternet = true;
                 }
@@ -186,7 +192,7 @@ public class MoodNote extends Fragment {
 
             @Override
             public void upDataResult(Boolean isSuccess) {        }
-        };
+        };*/
 
         //intialize();
         adapter = new MyAdapter<AdapterDateList>(getContext(),data,multiItemTypeSupport) {
@@ -276,7 +282,13 @@ public class MoodNote extends Fragment {
     private void intialize(){
         //Log.d("1","2");
         if(isUpdateFromInternet){
-        UpdateUserNote.getAuthorNote(user,getContext(),changeData);
+
+            //Log.d("1","1");
+            LogUtils.d("firstComeFromInternet",DataSupport.findAll(LocalUserNote.class));
+            updateData();
+            //Log.d("2","2");
+
+            //UpdateUserNote.getAuthorNote(user,getContext(),changeData);
         }else {
            updateData();
         }
@@ -284,12 +296,15 @@ public class MoodNote extends Fragment {
 
     private void updateData(){
         localUserNotes.clear();
-        List<LocalUserNote> findUserNote = DataSupport.order("updateDate desc").find(LocalUserNote.class);
+        List<LocalUserNote> findUserNote = DataSupport.where("user = ?",user.getObjectId()).order("updateDate desc").find(LocalUserNote.class);
         for (LocalUserNote userNote : findUserNote){
             if(!userNote.getUpdateType().equals("delet")){
                 localUserNotes.add(userNote);
             }
+            //isUpdateFromInternet = false;
         }
+        LogUtils.d("update",DataSupport.findAll(LocalUserNote.class));
+
             notifyDataSetChanged(mood,localUserNotes);
     }
 
@@ -409,9 +424,24 @@ public class MoodNote extends Fragment {
                 data.add(i);
             }
         }
+            setNoNoteDisplay(mood,data);
+
         adapter.notifyDataSetChanged();
         swipeRefreshNote.setRefreshing(false);
         dialog.dismiss();
+    }
+
+    private void setNoNoteDisplay(String mood, List<AdapterDateList> displayDataLists){
+        if(mood == ALL){
+            noNoteText.setText("主人好懒什么都没有记喵( ¯ □ ¯ ) ");
+        }else {
+            noNoteText.setText("主人还没有此项心情( T___T )");
+        }
+        if(displayDataLists == null || displayDataLists.size() == 0){
+            noNoteText.setVisibility(View.VISIBLE);
+        }else {
+            noNoteText.setVisibility(View.INVISIBLE);
+        }
     }
 
     private List<AdapterDateList> getListWithMood(String mood,List<LocalUserNote> alldata){

@@ -14,6 +14,9 @@ import com.example.bianqian.bmobbasic.User;
 import com.example.bianqian.bmobbasic.UserNote;
 import com.example.bianqian.db.LocalUserNote;
 import com.example.bianqian.impl.GetFindData;
+import com.example.bianqian.util.LogUtils;
+
+import org.litepal.crud.DataSupport;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -220,7 +223,6 @@ public class EditingTextActivity extends BasicActivity implements View.OnClickLi
                         //更新后台数据
                         //UpdateUserNote.updateNote(userNote, noteId, this, getResult);
                         if(noteId.equals("")){
-                            userNote.setNoteId("");
                             userNote.setUpdateType("creat");
 
                         }else{
@@ -228,6 +230,9 @@ public class EditingTextActivity extends BasicActivity implements View.OnClickLi
                         }
                         userNote.update(id);
                     }
+
+                    LogUtils.d("completeFinish", DataSupport.findAll(LocalUserNote.class));
+
                     finish();
                     break;
                 }
