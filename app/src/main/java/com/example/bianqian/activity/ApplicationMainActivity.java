@@ -13,13 +13,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AlertDialog;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -35,6 +31,10 @@ import com.example.bianqian.fragment.MoodNote;
 import com.example.bianqian.util.AllSharedPreference;
 import com.example.bianqian.util.GetAppVersionInformation;
 import com.example.bianqian.util.LevelUtils;
+import com.othershe.nicedialog.BaseNiceDialog;
+import com.othershe.nicedialog.NiceDialog;
+import com.othershe.nicedialog.ViewConvertListener;
+import com.othershe.nicedialog.ViewHolder;
 
 import org.litepal.LitePal;
 
@@ -306,7 +306,41 @@ public class ApplicationMainActivity extends BasicActivity {
             public void handleMessage(Message msg) {
                 switch (msg.what) {
                     case 100:
-                        AlertDialog.Builder builder = new AlertDialog.Builder(ApplicationMainActivity.this,R.style.MyDialog);
+                        NiceDialog.init()
+                                .setLayoutId(R.layout.update_app_version)
+                                .setConvertListener(new ViewConvertListener() {
+                                    @Override
+                                    public void convertView(ViewHolder viewHolder, final BaseNiceDialog baseNiceDialog) {
+                                        viewHolder.setText(R.id.update_app_versioncode,"版本号：" + versionCodes[0]);
+                                        String updatelog = updateLogs[0].replace("+","\n");
+                                        viewHolder.setText(R.id.update_app_log,updatelog);
+                                        viewHolder.setOnClickListener(R.id.update_app_download, new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                String downloadUrl = url[0];
+                                                DownloadManager.Request request = new DownloadManager.Request(Uri.parse(downloadUrl));
+                                                request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+                                                request.setTitle("喵记");
+                                                request.setDescription("");
+                                                File saveFile = new File(getExternalFilesDir(null) , "喵记.apk");
+                                                request.setDestinationUri(Uri.fromFile(saveFile));
+                                                DownloadManager manager = (DownloadManager) ApplicationMainActivity.this.getSystemService(Context.DOWNLOAD_SERVICE);
+
+                                                // 将下载请求加入下载队列, 返回一个下载ID
+                                                long downloadId = manager.enqueue(request);
+                                                baseNiceDialog.dismiss();
+                                            }
+                                        });
+                                    }
+                                })
+                                .setDimAmount(0.7f)
+                                .setShowBottom(true)
+                                .setMargin(5)
+                                .setOutCancel(true)
+                                .show(getSupportFragmentManager());
+
+
+                        /*AlertDialog.Builder builder = new AlertDialog.Builder(ApplicationMainActivity.this,R.style.MyDialog);
                         builder.setCancelable(true);
                         View updateApp = View.inflate(ApplicationMainActivity.this,R.layout.update_app_version,null);
                         builder.setView(updateApp);
@@ -341,7 +375,7 @@ public class ApplicationMainActivity extends BasicActivity {
                             }
                         });
                         dialog.show();
-                        break;
+                        break;*/
                 }
             }
         };
