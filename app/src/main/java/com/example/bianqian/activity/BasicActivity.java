@@ -23,7 +23,7 @@ public abstract class BasicActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView();
-        Bmob.initialize(this,"3da138f19a8d8a32a5a64ac1c4e740df");
+        Bmob.initialize(this,"3da138f19a8d8a32a5a64ac1c4e740df","bmob");
         //初始化view
         initViews();
         //初始化数据
